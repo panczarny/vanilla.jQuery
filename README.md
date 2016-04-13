@@ -6,12 +6,12 @@ This is designed to replace jQuery with vanilla solutions.
 
 
 now done:
-fadeIn()
-fadeOut()
-hide()
-show()
-toggle()
-Ajax()
-addClass()
-removeClass()
-toggleClass() needs fix on IE9
+* fadeIn();
+* fadeOut();
+* hide();
+* show();
+* toggle();
+* Ajax();
+* addClass();
+* removeClass();
+* toggleClass(); (needs fix on IE9)
