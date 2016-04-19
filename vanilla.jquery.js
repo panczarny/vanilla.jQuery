@@ -42,6 +42,7 @@ function isFunction(f) {
 ** fadeIn
 **/
 Element.prototype.fadeIn = function(duration, callback, display) {
+	if(throwErrors){throwErrors = throwErrors;}else{throwErrors = false;}
 	duration = duration || 300;
 	callback = callback || function() {};
 	display = display || "block";
@@ -73,6 +74,7 @@ Element.prototype.fadeIn = function(duration, callback, display) {
 ** fadeOut
 **/
 Element.prototype.fadeOut = function(duration, callback, display) {
+	if(throwErrors){throwErrors = throwErrors;}else{throwErrors = false;}
 	duration = duration || 300;
 	callback = callback || function() {};
 	display = display || "block";
@@ -204,6 +206,7 @@ function(message, status) {
 });
 **/
 var Ajax = function(options, done, fail) {
+	if(throwErrors){throwErrors = throwErrors;}else{throwErrors = false;}
 	/*
 	checking if all necessary data provided
 	necessary:
