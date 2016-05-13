@@ -2,6 +2,7 @@
 ** done:
 fadeIn()
 fadeOut()
+fadeToggle()
 hide()
 show()
 toggle()
@@ -9,6 +10,7 @@ Ajax()
 addClass()
 removeClass()
 toggleClass() trzeba fix na IE9
+parents()
 **/
 
 var throwErrors = true;
@@ -36,6 +38,12 @@ function isFunction(f) {
 ** END OF GLOBAL NEEDS
 **
 **
+**/
+
+/******************************************/
+/******************************************/
+/*
+** Animations
 **/
 
 /*
@@ -70,6 +78,8 @@ Element.prototype.fadeIn = function(duration, callback, display) {
 	})();
 };
 
+/******************************************/
+
 /*
 ** fadeOut
 **/
@@ -103,6 +113,28 @@ Element.prototype.fadeOut = function(duration, callback, display) {
 	})();
 };
 
+/******************************************/
+
+/*
+** fadeToggle
+**/
+Element.prototype.fadeToggle = function(duration, callback, display) {
+	duration = duration || 300;
+	callback = callback || function() {};
+	display = display || "block";
+	var _ = this;
+	var curr_display = (window.getComputedStyle ? getComputedStyle(_, null) : _.currentStyle).display;
+	switch (curr_display) {
+		case 'none':
+		_.fadeIn(duration, callback, display);
+		break;
+		default:
+		_.fadeOut(duration, callback, display);
+		break;
+	}
+};
+
+/******************************************/
 
 /*
 ** hide()
@@ -111,6 +143,7 @@ Element.prototype.hide = function() {
 	this.style.display = "none";
 };
 
+/******************************************/
 
 /*
 ** show()
@@ -120,6 +153,7 @@ Element.prototype.show = function(display) {
 	this.style.display = display;
 };
 
+/******************************************/
 
 /*
 ** toggle()
@@ -136,6 +170,11 @@ Element.prototype.toggle = function(display) {
 	}
 };
 
+/******************************************/
+/******************************************/
+/*
+** Class Manipulation
+**/
 
 /*
 ** addClass
@@ -153,6 +192,7 @@ Element.prototype.addClass = function(className) {
 	return true;
 };
 
+/******************************************/
 
 /*
 ** removeClass
@@ -170,6 +210,7 @@ Element.prototype.removeClass = function(className) {
 	return true;
 };
 
+/******************************************/
 
 /*
 ** toggleClass
@@ -188,6 +229,66 @@ Element.prototype.toggleClass = function(className) {
 	return true;
 };
 
+/******************************************/
+/******************************************/
+/*
+** DOM
+**/
+
+/*
+** Traverse DOM searching SELECTOR
+**/
+Element.prototype.parents = function(selector) {
+	if(!selector) {
+		return false;
+	}
+	var type;
+	var _ = this;
+	var el = _;
+	if(selector.indexOf("#") === 0) {
+		type = 'id';
+		selector = selector.substr(1);
+	}
+	else if(selector.indexOf(".") === 0) {
+		type = 'class';
+		selector = selector.substr(1);
+	}
+	else {
+		type = 'tag';
+	}
+
+	while(_.parentNode) {
+		el = el.parentNode;
+		if(el.tagName.toLowerCase() == 'html') {
+			return false;
+		}
+		if(el) {
+			switch (type) {
+				case 'id':
+				if(el.id && el.id == selector) {
+					return el;
+				}
+				break;
+				case 'class':
+				if(el.classList && el.classList.contains(selector)) {
+					return el;
+				}
+				break;
+				case 'tag':
+				if(el.tagName && el.tagName.toLowerCase() == selector.toLowerCase()) {
+					return el;
+				}
+				break;
+			}
+		}
+	}
+	return false;
+};
+/*
+** END OF Traverse DOM searching SELECTOR
+**/
+
+/******************************************/
 
 
 
@@ -316,37 +417,3 @@ var Ajax = function(options, done, fail) {
 /*
 ** END OF Ajax
 **/
-
-
-
-
-/*
-** TESTY
-**/
-(function() {
-	var f = document.getElementsByClassName('wrapper')[0];
-	f.toggleClass('wrapper');
-	// f.toggleClass('wrapper');
-
-	// ajax request example
-	Ajax({
-		type: 'GET',
-		url: 'ajax.php'
-	}, 
-	function(message, status, statusText) {
-		var data;
-		try {
-			data = JSON.parse(message);
-		}
-		catch(e) {
-			console.log(e.message);
-			return false;
-		}
-		console.log(data);
-	},
-	function(message, status, statusText) {
-		console.log(message);
-		console.log(status);
-		console.log(statusText);
-	});
-})();
