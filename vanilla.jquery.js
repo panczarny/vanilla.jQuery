@@ -11,6 +11,7 @@ addClass()
 removeClass()
 toggleClass() trzeba fix na IE9
 parents()
+form.serialize()
 **/
 
 var throwErrors = true;
@@ -236,7 +237,7 @@ Element.prototype.toggleClass = function(className) {
 **/
 
 /*
-** Traverse DOM searching SELECTOR
+** Traverse DOM UP searching SELECTOR
 **/
 Element.prototype.parents = function(selector) {
 	if(!selector) {
@@ -306,7 +307,7 @@ function(message, status) {
 	// fail
 });
 **/
-var Ajax = function(options, done, fail) {
+var Ajax = function(options) {
 	if(throwErrors){throwErrors = throwErrors;}else{throwErrors = false;}
 	/*
 	checking if all necessary data provided
@@ -319,6 +320,8 @@ var Ajax = function(options, done, fail) {
 	URL = options.url;
 	DATA = options.data;
 	ASYNC = options.async;
+	var done = options.done;
+	var fail = options.fail;
 	if(!TYPE) {
 		TYPE = "GET";
 	} else if(typeof TYPE != 'string' && (TYPE.toUpperCase() != 'GET' && TYPE.toUpperCase() != 'POST')) {
@@ -358,7 +361,9 @@ var Ajax = function(options, done, fail) {
 	var responseText;
 	xhr.open(TYPE, URL);
 	xhr.onreadystatechange = function() {
-		console.log('PROBLEM ON IE9!');
+		if(throwErrors){
+			console.log('PROBLEM ON IE9!');
+		}
 		var readyState;
 		var statusText;
 		try {
@@ -417,3 +422,33 @@ var Ajax = function(options, done, fail) {
 /*
 ** END OF Ajax
 **/
+
+/******************************************/
+
+/*
+** Serializing form into query string
+**/
+Element.prototype.serialize = function() {
+	var field, l, s = [], f = this;
+	if (typeof f == 'object' && f.nodeName == "FORM") {
+		var len = f.elements.length;
+		for (var i=0; i<len; i++) {
+			field = f.elements[i];
+			if (field.name && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
+				if (field.type == 'select-multiple') {
+					l = f.elements[i].options.length; 
+					for (var j=0; j<l; j++) {
+						if(field.options[j].selected)
+							s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.options[j].value);
+					}
+				} else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+					s[s.length] = encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value);
+				}
+			}
+		}
+		return s.join('&').replace(/%20/g, '+');
+	}
+	else {
+		return false;
+	}
+};
