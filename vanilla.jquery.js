@@ -12,6 +12,7 @@ removeClass()
 toggleClass() trzeba fix na IE9
 parents()
 form.serialize()
+getElement()
 **/
 
 var throwErrors = true;
@@ -235,6 +236,22 @@ Element.prototype.toggleClass = function(className) {
 /*
 ** DOM
 **/
+
+
+
+/*
+** getElement
+**/
+var Q = function(selector) {
+	if(typeof selector !== 'string') {
+		return false;
+	}
+	var elem = document.querySelectorAll(selector);
+	return elem;
+};
+
+
+/******************************************/
 
 /*
 ** Traverse DOM UP searching SELECTOR
