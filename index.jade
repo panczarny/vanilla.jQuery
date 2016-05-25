@@ -11,13 +11,29 @@ html
 	body
 		.container
 			.col-xs-4.wrapper
-				p(style="display: none")
+				//- p#p(style="display: none")
+				p#p
 					|Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum  fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				#id1
+				#id2
+				.items
+					p hello
+				.items
+					h1 world
+				.items
+					a(href="#here") HERE
 
-		script(src="new.vanilla.jquery.js")
+		script(src="vanilla.jquery.js")
 		script.
 			Q("p").fadeIn();
-		//- script(src="jquery.js")
+			var e = Q("p");
+			console.log(e);
+			console.log(Q("p"));
+		//- 
+			script(src="jquery.js")
+			script.
+				$("#p").fadeOut(300);
+				console.log($("p"));
 		//- script.
 			$(function() {
 				$.ajax({

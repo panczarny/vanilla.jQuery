@@ -12,10 +12,24 @@
   <body>
     <div class="container">
       <div class="col-xs-4 wrapper">
-        <p style="display: none">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum  fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p id="p">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum  fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <div id="id1"></div>
+        <div id="id2"></div>
+        <div class="items">
+          <p>hello</p>
+        </div>
+        <div class="items">
+          <h1>world</h1>
+        </div>
+        <div class="items"><a href="#here">HERE</a></div>
       </div>
     </div>
-    <script src="new.vanilla.jquery.js"></script>
-    <script>Q("p").fadeIn();</script>
+    <script src="vanilla.jquery.js"></script>
+    <script>
+      Q("p").fadeIn();
+      var e = Q("p");
+      console.log(e);
+      console.log(Q("p"));
+    </script>
   </body>
 </html>
