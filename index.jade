@@ -8,29 +8,35 @@ html
 		meta(name="viewport" content="width=device-width, initial-scale=1")
 		link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css")
 		link(rel="stylesheet" href="style.css")
+		style.
+			p {
+				display: none;
+			}
 	body
 		.container
-			.col-xs-4.wrapper
+			.col-xs-12.wrapper
 				//- p#p(style="display: none")
-				p#p
-					|Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum  fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				#id1
-				#id2
+				p#p(data-color="green")
+					|Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minillit anim id est laborum.
 				.items
 					p hello
+				#id1
+				#id2
 				.items
 					h1 world
 				.items
 					a(href="#here") HERE
 
-		script(src="vanilla.jquery.js")
+		//- script(src="new.vanilla.jquery.js")
+		script(src="jquery.js")
 		script.
+			$("#p").fadeIn(1000);
+		//- script.
 			Q("p").fadeIn();
 			var e = Q("p");
 			console.log(e);
 			console.log(Q("p"));
 		//- 
-			script(src="jquery.js")
 			script.
 				$("#p").fadeOut(300);
 				console.log($("p"));
