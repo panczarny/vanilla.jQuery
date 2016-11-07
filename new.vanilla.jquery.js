@@ -137,6 +137,40 @@ var vanilla = (function() {
 			return doANIMfade.call(this, 'fadeIn', duration, callback, display);
 		};
 
+		q.debounce = function(func, wait, immediate) {
+			// https://github.com/yckart/jquery.unevent.js/blob/master/jquery.unevent.js
+			var timeout;
+
+			return function() {
+				var context = this, args = arguments;
+				var later = function() {
+					timeout = null;
+					if(!immediate) {
+						func.apply(context, args);
+					}
+				};
+				var callNow = immediate && !timeout;
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+				if(callNow) {
+					func.apply(context, args);
+				}
+			};
+		};
+
+		q.once = function(fn, context) {
+			var result;
+
+			return function() {
+				if(fn) {
+					result = fn.apply(context || this, arguments);
+					fn = null;
+				}
+
+				return result;
+			};
+		};
+
 
 
 		return q;
@@ -144,5 +178,23 @@ var vanilla = (function() {
 })();
 
 
-// console.log(vanilla("p").attr('data-color'));
-vanilla("p").fadeIn();
+
+document.addEventListener('DOMContentLoaded', DOMInit);
+
+function DOMInit() {
+	// console.log(vanilla("p").attr('data-color'));
+	vanilla("p").fadeIn();
+
+	var myEfficientFn = vanilla.debounce(function() {
+		console.log('I\'m debounced!');
+	}, 250);
+	window.addEventListener('resize', myEfficientFn);
+
+
+	var canFireOnlyOnce = vanilla.once(function() {
+		console.log('Only once fired!');
+	});
+
+	canFireOnlyOnce();
+	canFireOnlyOnce();
+}
