@@ -3,4 +3,20 @@
   padding: 50px 40px;
 }
 
+[data-color='red'] {
+  color: red;
+}
+
+[data-color='green'] {
+  color: green;
+}
+
+[data-color='purple'] {
+  color: purple;
+}
+
+[fz='12'] {
+  font-size: 36px;
+}
+
 /*# sourceMappingURL=style.css.map */

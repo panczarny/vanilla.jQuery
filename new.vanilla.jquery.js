@@ -1,5 +1,7 @@
-var vanilla = (function() {
+// browser-sync start --no-online --server --files "*.html, *.js, *.css"
+// browser-sync start -p "localhost/vanilla.jQuery" --files "*.html, *.js, *.css"
 
+var vanilla = (function() {
 	function doCSS(prop, val) {
 		var isSetVal = Boolean(val);
 		var isSetProp = Boolean(prop);
@@ -56,7 +58,7 @@ var vanilla = (function() {
 				s.opacity = s.opacity || 0;
 				s.display = display;
 				(function fade() {
-					(s.opacity = parseFloat(s.opacity) + step) > 1 ? 
+					(s.opacity = parseFloat(s.opacity) + step) > 1 ?
 					(function() {
 						s.opacity = 1;
 						if(callback){
@@ -66,7 +68,7 @@ var vanilla = (function() {
 					: setTimeout(fade, timeout);
 				})();
 				break;
-				
+
 				case 'fadeOut':
 				s.opacity = 1;
 				s.display = display;
@@ -88,7 +90,9 @@ var vanilla = (function() {
 					: setTimeout(fade, timeout);
 				})();
 				break;
-			}			
+			}
+
+		return this;
 		});
 		/*
 		*/
@@ -183,7 +187,9 @@ document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
 	// console.log(vanilla("p").attr('data-color'));
-	vanilla("p").fadeIn();
+	console.log(vanilla("p").fadeIn());
+	vanilla("p").fadeIn().css('background', 'red');
+	return;
 
 	var myEfficientFn = vanilla.debounce(function() {
 		console.log('I\'m debounced!');

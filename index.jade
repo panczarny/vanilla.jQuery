@@ -18,8 +18,10 @@ html
 				//- p#p(style="display: none")
 				p#p(data-color="green")
 					|Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minillit anim id est laborum.
+				p(data-color='orange') hello
+				p(data-color='orange') hello
+				p() hello
 				.items
-					p hello
 				#id1
 				#id2
 				.items
@@ -27,10 +29,17 @@ html
 				.items
 					a(href="#here") HERE
 
+		script(src="q.js")
 		//- script(src="new.vanilla.jquery.js")
-		script(src="jquery.js")
-		script.
-			$("#p").fadeIn(1000);
+		//- script(src="jquery.js")
+		//- script.
+			//- $("#p").fadeIn(1000);
+			//- var d = document.querySelectorAll('p');
+			//- console.log(typeof d);
+			//- console.dir($.ajaxSetup);
+			//- console.dir($.toArray);
+			//- console.log(typeof $.toArray(d));
+			//- console.dir($);
 		//- script.
 			Q("p").fadeIn();
 			var e = Q("p");
