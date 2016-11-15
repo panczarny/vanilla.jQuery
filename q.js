@@ -1,3 +1,36 @@
+/*
+var cumulativeOffset = function(element) {
+	var top = 0, left = 0;
+	do {
+		top += element.offsetTop || 0;
+		left += element.offsetLeft || 0;
+		element = element.offsetParent;
+	} while(element);
+
+	return {
+		top: top,
+		left: left
+	};
+};*/
+
+// test if matches selector
+// http://stackoverflow.com/questions/3304638/test-if-a-selector-matches-a-given-element
+// https://davidwalsh.name/element-matches-selector
+// http://youmightnotneedjquery.com/#matches
+
+// delegate events
+// http://stackoverflow.com/questions/14677019/emulate-jquery-on-with-selector-in-pure-javascript
+// https://codepen.io/32bitkid/post/understanding-delegated-javascript-events
+
+// remove event listener
+// http://www.w3schools.com/jsref/met_element_removeeventlistener.asp
+
+
+
+
+
+
+
 (function() {
 	const Q = (selector) => new Library(selector);
 
@@ -120,6 +153,23 @@
 				this.each((node) => node.textContent = txt);
 
 				return this;
+			},
+
+			events: {
+				add: function(type, callback, useCapture = false) {
+					this.each((node) => node.addEventListener(type, callback, useCapture));
+				},
+
+				on: function(type, element, callback) {
+					this.each((node) => {
+						// if()
+						node.addEventListener(type, function(e) {
+							console.log(e);
+							// callback();
+						}, useCapture);
+					});
+					console.log(arguments);
+				}
 			}
 		};
 
@@ -178,6 +228,18 @@
 
 		text: function(text) {
 			return this.helpers.setTEXT.call(this, text);
+		},
+
+		/****************************/
+
+		click: function(callback) {
+			return this.helpers.events.add.call(this, 'click', callback);
+		},
+
+		/****************************/
+
+		on: function(type, element, callback = null) {
+			return this.helpers.events.on.call(this, type, element, callback);
 		}
 	};
 
@@ -247,5 +309,5 @@ document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
 	let i = 10;
-	Q('p').show().each((node) => Q(node).attr('fz', (i++) + '')).text('doge');
+	Q('body').show().on('click', 'p', (e) => {console.log('click');});
 }
