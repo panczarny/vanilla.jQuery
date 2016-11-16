@@ -245,7 +245,11 @@ var cumulativeOffset = function(element) {
 		/****************************/
 
 		text: function(text) {
-			return this.helpers.setTEXT.call(this, text);
+			console.log(text);
+			if(text === undefined) {
+				// return 
+			}
+			// return this.helpers.setTEXT.call(this, text);
 		},
 
 		/****************************/
@@ -257,9 +261,8 @@ var cumulativeOffset = function(element) {
 		/****************************/
 
 		append: function(elements) {
-			console.log(elements);
 			this.each(function(node, i) {
-				elements.forEach(function(n, i) {
+				elements.each(function(n, i) {
 					node.appendChild(n);
 				});
 			});
@@ -271,11 +274,11 @@ var cumulativeOffset = function(element) {
 		clone: function() {
 			let clones = [];
 			this.each(function(node, i) {
-				console.log('------------clone----------------');
-				const clone = Q(node.cloneNode(true));
+				const clone = node.cloneNode(true);
 				clones.push(clone);
 			});
-			return clones;
+			this.nodes = clones;
+			return this;
 		}
 	};
 
@@ -435,13 +438,17 @@ function DOMInit() {
 		'data-i': 23
 	})
 	.input(function() {
-		console.log('dd');
+		// console.log('dd');
 	})
 	;
+
+	const $p = Q('#p');
+	console.log($p.text());
 
 	$i = Q('input');
 
 	Q('body')
+	// .append($i)
 	.append($i.clone())
 	;
 }

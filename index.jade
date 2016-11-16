@@ -35,18 +35,21 @@ html
 				.items
 					a(href="#here") HERE
 
-		-var script = 'j'
 		-var script = 'q'
+		-var script = 'j'
 
 		if script == 'q'
 			script(src="q.js")
 		else if script == 'j'
 			script(src="jquery.js")
 			script.
+				console.error('line 1508')
 				let i = 0;
-				const $p = $('<p>');
-				$p.text('test; ' + (i++));
-				$p.appendTo($('.p-wrapper'));
+				const $p = $('p');
+				console.log($p.text());
+				//- const $p = $('<p>');
+				//- $p.text('test; ' + (i++));
+				//- $p.appendTo($('.p-wrapper'));
 
 				//- var d = document.querySelectorAll('p');
 				//- console.log(typeof d);
