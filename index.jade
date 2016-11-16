@@ -22,6 +22,7 @@ html
 				p(data-color='orange') hello
 				p() hello
 				.items
+				input
 				#id1
 				#id2
 				.items
@@ -29,17 +30,29 @@ html
 				.items
 					a(href="#here") HERE
 
-		script(src="q.js")
+		-var script = 'j'
+		-var script = 'q'
+
+		if script == 'q'
+			script(src="q.js")
+		else if script == 'j'
+			script(src="jquery.js")
+			script.
+				$("#p")
+				.fadeIn(1000)
+				.hover(function() {
+					console.log('in');
+				}, function() {
+					console.log('out');
+				})
+				;
+				//- var d = document.querySelectorAll('p');
+				//- console.log(typeof d);
+				//- console.dir($.ajaxSetup);
+				//- console.dir($.toArray);
+				//- console.log(typeof $.toArray(d));
+				//- console.dir($);
 		//- script(src="new.vanilla.jquery.js")
-		//- script(src="jquery.js")
-		//- script.
-			//- $("#p").fadeIn(1000);
-			//- var d = document.querySelectorAll('p');
-			//- console.log(typeof d);
-			//- console.dir($.ajaxSetup);
-			//- console.dir($.toArray);
-			//- console.log(typeof $.toArray(d));
-			//- console.dir($);
 		//- script.
 			Q("p").fadeIn();
 			var e = Q("p");

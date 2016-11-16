@@ -1,3 +1,6 @@
+// browser-sync start --no-online --server --files "*.html, *.js, *.css"
+// browser-sync start -p "localhost/vanilla.jQuery" --files "*.html, *.js, *.css"
+
 /*
 var cumulativeOffset = function(element) {
 	var top = 0, left = 0;
@@ -77,6 +80,8 @@ var cumulativeOffset = function(element) {
 						return this.nodes[0].style[prop];
 					}
 				}
+
+				return this;
 			},
 
 			doANIMfade: function(type, duration = 300, callback = function() {}, display = 'block') {
@@ -158,6 +163,8 @@ var cumulativeOffset = function(element) {
 			events: {
 				add: function(type, callback, useCapture = false) {
 					this.each((node) => node.addEventListener(type, callback, useCapture));
+
+					return this;
 				},
 
 				on: function(type, element, callback) {
@@ -168,7 +175,10 @@ var cumulativeOffset = function(element) {
 							// callback();
 						}, useCapture);
 					});
+
 					console.log(arguments);
+
+					return this;
 				}
 			}
 		};
@@ -232,12 +242,6 @@ var cumulativeOffset = function(element) {
 
 		/****************************/
 
-		click: function(callback) {
-			return this.helpers.events.add.call(this, 'click', callback);
-		},
-
-		/****************************/
-
 		on: function(type, element, callback = null) {
 			return this.helpers.events.on.call(this, type, element, callback);
 		}
@@ -258,6 +262,61 @@ var cumulativeOffset = function(element) {
 			target[key] = options[key];
 		}
 	};
+	Q.fn.extend = Library.prototype.extend = function() {
+		const target = this;
+
+		const options = arguments[0];
+		let key;
+
+		if(typeof arguments[0] !== 'object') {
+			return;
+		}
+
+		for(key in options) {
+			target[key] = options[key];
+		}
+	};
+
+	/****************************/
+	/****shortcuts for events****/
+	/****************************/
+	Q.fn.extend({
+		click: function(callback) {
+			return this.helpers.events.add.call(this, 'click', callback);
+		},
+
+		/****************************/
+
+		keydown: function(callback) {
+			return this.helpers.events.add.call(this, 'keydown', callback);
+		},
+
+		/****************************/
+
+		keyup: function(callback) {
+			return this.helpers.events.add.call(this, 'keyup', callback);
+		},
+
+		/****************************/
+
+		keypress: function(callback) {
+			return this.helpers.events.add.call(this, 'keypress', callback);
+		},
+
+		/****************************/
+
+		input: function(callback) {
+			return this.helpers.events.add.call(this, 'input', callback);
+		},
+
+		/****************************/
+
+		hover: function(callbackIN, callbackOUT = function() {}) {
+			this.helpers.events.add.call(this, 'mouseenter', callbackIN);
+			this.helpers.events.add.call(this, 'mouseleave', callbackOUT);
+			return this;
+		}
+	});
 
 	Q.extend({
 		debounce: function(func, wait, immediate) {
@@ -309,5 +368,20 @@ document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
 	let i = 10;
-	Q('body').show().on('click', 'p', (e) => {console.log('click');});
+	Q('input')
+	.attr('data-bg', 'purple')
+	.css({
+		border: '4px solid green',
+		display: 'block',
+		width: '300px'
+	})
+	.show()
+	.hover((e) => console.log('in'), (e) => console.log('out'))
+	.click((e) => console.log('click'))
+	.keydown((e) => console.log('keydown'))
+	.keyup((e) => console.log('keyup'))
+	.keypress((e) => console.log('keypress'))
+	.input((e) => console.log('input'))
+	;
+	// .on('click', 'p', (e) => {console.log('click');});
 }
