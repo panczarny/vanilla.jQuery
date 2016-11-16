@@ -35,13 +35,18 @@ var cumulativeOffset = function(element) {
 
 
 (function() {
-	const Q = (selector) => new Library(selector);
+	const Q = (selector, ...args) => new Library(selector, args);
 
-	let Library = function(selector) {
+	let Library = function(selector, args) {
 		let _selector;
 
 		if(typeof selector === 'string') {
-			_selector = document.querySelectorAll(selector);
+			if(selector[0] === "<" && selector[selector.length - 1] === ">" && selector.length >= 3) {
+				_selector = createElement(selector, args[0]);
+			}
+			else {
+				_selector = document.querySelectorAll(selector);
+			}
 		}
 		else if(typeof selector === 'object') {
 			_selector = [selector];
@@ -364,6 +369,20 @@ var cumulativeOffset = function(element) {
 	});
 
 
+	// Functions
+	const createElement = (name, attrs = {}) => {
+		name = name.replace(/[<>]/g, '');
+		const el = document.createElement(name);
+		if(typeof attrs !== undefined) {
+			for(let key in attrs) {
+				if(attrs.hasOwnProperty(key)) {
+					el.setAttribute(key, attrs[key]);
+				}
+			}
+		}
+		return el;
+	};
+
 	if(!window.Q) {
 		window.Q = Q;
 	}
@@ -377,6 +396,12 @@ document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
 	let i = 10;
+	console.log(Q('<input>', {
+		'data-i': 23
+	}).nodes);
+	return;
+
+
 	Q('input')
 	.attr('data-bg', 'purple')
 	.css({
