@@ -10,7 +10,7 @@ html
 		link(rel="stylesheet" href="style.css")
 		style.
 			p {
-				display: none;
+				//display: none;
 			}
 	body
 		.container
@@ -27,6 +27,9 @@ html
 					input
 				#id1
 				#id2
+				.p-wrapper
+				.p-wrapper
+				.p-wrapper
 				.items
 					h1 world
 				.items
@@ -40,14 +43,11 @@ html
 		else if script == 'j'
 			script(src="jquery.js")
 			script.
-				$("#p")
-				.fadeIn(1000)
-				.hover(function() {
-					console.log('in');
-				}, function() {
-					console.log('out');
-				})
-				;
+				let i = 0;
+				const $p = $('<p>');
+				$p.text('test; ' + (i++));
+				$p.appendTo($('.p-wrapper'));
+
 				//- var d = document.querySelectorAll('p');
 				//- console.log(typeof d);
 				//- console.dir($.ajaxSetup);

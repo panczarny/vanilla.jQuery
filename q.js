@@ -38,17 +38,23 @@ var cumulativeOffset = function(element) {
 	const Q = (selector, ...args) => new Library(selector, args);
 
 	let Library = function(selector, args) {
+		// console.log(typeof selector);
+		// console.dir(selector);
+		// console.log(isElement(selector));
 		let _selector;
 
 		if(typeof selector === 'string') {
 			if(selector[0] === "<" && selector[selector.length - 1] === ">" && selector.length >= 3) {
-				_selector = createElement(selector, args[0]);
+				_selector = [createElement(selector, args[0])];
 			}
 			else {
 				_selector = document.querySelectorAll(selector);
 			}
 		}
 		else if(typeof selector === 'object') {
+			// if (isElement(selector) === true) {
+			// 	console.error('IS ELEMENT');
+			// }
 			_selector = [selector];
 		}
 		const nodes = _selector;
@@ -246,6 +252,30 @@ var cumulativeOffset = function(element) {
 
 		on: function(type, element, callback = null) {
 			return this.helpers.events.on.call(this, type, element, callback);
+		},
+
+		/****************************/
+
+		append: function(elements) {
+			console.log(elements);
+			this.each(function(node, i) {
+				elements.forEach(function(n, i) {
+					node.appendChild(n);
+				});
+			});
+			return this;
+		},
+
+		/****************************/
+
+		clone: function() {
+			let clones = [];
+			this.each(function(node, i) {
+				console.log('------------clone----------------');
+				const clone = Q(node.cloneNode(true));
+				clones.push(clone);
+			});
+			return clones;
 		}
 	};
 
@@ -383,6 +413,11 @@ var cumulativeOffset = function(element) {
 		return el;
 	};
 
+	const isElement = (element) => {
+		const allowedNodeTypes = [1, 9, 11];
+		return allowedNodeTypes.indexOf(element.nodeType) > -1;
+	};
+
 	if(!window.Q) {
 		window.Q = Q;
 	}
@@ -396,30 +431,17 @@ document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
 	let i = 10;
-	console.log(Q('<input>', {
+	var $i = Q('<input>', {
 		'data-i': 23
-	}).nodes);
-	return;
-
-
-	Q('input')
-	.attr('data-bg', 'purple')
-	.css({
-		border: '4px solid green',
-		display: 'block',
-		width: '300px'
 	})
-	.show()
-	// .hover((e) => console.log('in'), (e) => console.log('out'))
-	// .click((e) => console.log('click'))
-	// .keydown((e) => console.log('keydown'))
-	// .keyup((e) => console.log('keyup'))
-	// .keypress((e) => console.log('keypress'))
-	// .input((e) => console.log('input'))
-	.focus((e) => console.log('focus'))
-	.blur((e) => console.log('blur'))
-	// ;
-	.input((e) => console.log('input'))
+	.input(function() {
+		console.log('dd');
+	})
 	;
-	// ;
+
+	$i = Q('input');
+
+	Q('body')
+	.append($i.clone())
+	;
 }
