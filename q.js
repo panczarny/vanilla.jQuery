@@ -167,16 +167,13 @@ var cumulativeOffset = function(element) {
 					return this;
 				},
 
-				on: function(type, element, callback) {
+				on: function(type, callback, useCapture = false) {
+					if(type === undefined || callback === undefined) {
+						return this;
+					}
 					this.each((node) => {
-						// if()
-						node.addEventListener(type, function(e) {
-							console.log(e);
-							// callback();
-						}, useCapture);
+						node.addEventListener(type, callback, useCapture);
 					});
-
-					console.log(arguments);
 
 					return this;
 				}
@@ -311,6 +308,18 @@ var cumulativeOffset = function(element) {
 
 		/****************************/
 
+		focus: function(callback) {
+			return this.helpers.events.add.call(this, 'focus', callback);
+		},
+
+		/****************************/
+
+		blur: function(callback) {
+			return this.helpers.events.add.call(this, 'blur', callback);
+		},
+
+		/****************************/
+
 		hover: function(callbackIN, callbackOUT = function() {}) {
 			this.helpers.events.add.call(this, 'mouseenter', callbackIN);
 			this.helpers.events.add.call(this, 'mouseleave', callbackOUT);
@@ -376,12 +385,16 @@ function DOMInit() {
 		width: '300px'
 	})
 	.show()
-	.hover((e) => console.log('in'), (e) => console.log('out'))
-	.click((e) => console.log('click'))
-	.keydown((e) => console.log('keydown'))
-	.keyup((e) => console.log('keyup'))
-	.keypress((e) => console.log('keypress'))
+	// .hover((e) => console.log('in'), (e) => console.log('out'))
+	// .click((e) => console.log('click'))
+	// .keydown((e) => console.log('keydown'))
+	// .keyup((e) => console.log('keyup'))
+	// .keypress((e) => console.log('keypress'))
+	// .input((e) => console.log('input'))
+	.focus((e) => console.log('focus'))
+	.blur((e) => console.log('blur'))
+	// ;
 	.input((e) => console.log('input'))
 	;
-	// .on('click', 'p', (e) => {console.log('click');});
+	// ;
 }
