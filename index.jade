@@ -16,7 +16,7 @@ html
 		.container
 			.col-xs-12.wrapper
 				//- p#p(style="display: none")
-				p#p(data-color="green")
+				p#p(data-color="green").has
 					|first
 					span inside
 				p second
@@ -42,10 +42,7 @@ html
 		else if script == 'j'
 			script(src="jquery.js")
 			script.
-				console.error('line 1508')
-				let i = 0;
-				const $p = $('p');
-				console.log($p.text());
+				console.log($('p').hasClass(''));
 				//- const $p = $('<p>');
 				//- $p.text('test; ' + (i++));
 				//- $p.appendTo($('.p-wrapper'));

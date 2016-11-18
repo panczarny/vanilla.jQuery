@@ -182,6 +182,18 @@ var cumulativeOffset = function(element) {
 
 					return this;
 				}
+			},
+
+			classManipulation: function(type, val) {
+				let classes;
+				classes = val.split(' ');
+				this.each((node) => {
+					classes.forEach((c) => {
+						node.classList[type](c);
+					});
+				});
+
+				return this;
 			}
 		};
 
@@ -290,6 +302,40 @@ var cumulativeOffset = function(element) {
 			});
 			this.nodes = clones;
 			return this;
+		},
+
+		/****************************/
+
+		addClass: function(val = '') {
+			if(val !== ''){
+				return this.helpers.classManipulation.call(this, 'add', val);
+			}
+		},
+
+		/****************************/
+
+		removeClass: function(val = '') {
+			if(val !== ''){
+				return this.helpers.classManipulation.call(this, 'remove', val);
+			}
+		},
+
+		/****************************/
+
+		toggleClass: function(val = '') {
+			if(val !== ''){
+				return this.helpers.classManipulation.call(this, 'toggle', val);
+			}
+		},
+
+		/****************************/
+
+		hasClass: function(val = '') {
+			let contains = false;
+			if(val !== ''){
+				this.each((node) => contains = (node.classList.contains(val) ? true : contains));
+			}
+			return contains;
 		}
 	};
 
@@ -444,5 +490,7 @@ var cumulativeOffset = function(element) {
 document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
-	Q('body').append(Q('p').clone());
+	console.log(Q('p').hasClass(''));
+	Q('#p').removeClass('');
+	console.log(Q('p').hasClass(''));
 }

@@ -18,3 +18,7 @@ now done:
 * append(Q: elements)
 * appendTo(string || Q: elements)
 * clone()
+* addClass(string: val)
+* removeClass(string: val)
+* toggleClass(string: val)
+* hasClass(string: val)
