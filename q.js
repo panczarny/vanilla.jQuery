@@ -200,14 +200,14 @@ var cumulativeOffset = function(element) {
 
 		/****************************/
 
-		hide: function () {
+		hide: function() {
 			this.nodes.forEach((node, i) => node.style.display = 'none');
 			return this;
 		},
 
 		/****************************/
 
-		show: function (style = 'block') {
+		show: function(style = 'block') {
 			this.nodes.forEach((node, i) => node.style.display = style);
 			return this;
 		},
@@ -444,7 +444,5 @@ var cumulativeOffset = function(element) {
 document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
-	Q('#p').clone().appendTo('body');
-	// Q('#p').appendTo('body');
-
+	Q('body').append(Q('p').clone());
 }
