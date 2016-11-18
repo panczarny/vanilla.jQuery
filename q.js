@@ -38,9 +38,6 @@ var cumulativeOffset = function(element) {
 	const Q = (selector, ...args) => new Library(selector, args);
 
 	let Library = function(selector, args) {
-		// console.log(typeof selector);
-		// console.dir(selector);
-		// console.log(isElement(selector));
 		let _selector;
 
 		if(typeof selector === 'string') {
@@ -52,9 +49,6 @@ var cumulativeOffset = function(element) {
 			}
 		}
 		else if(typeof selector === 'object') {
-			// if (isElement(selector) === true) {
-			// 	console.error('IS ELEMENT');
-			// }
 			_selector = [selector];
 		}
 		const nodes = _selector;
@@ -245,11 +239,14 @@ var cumulativeOffset = function(element) {
 		/****************************/
 
 		text: function(text) {
-			console.log(text);
 			if(text === undefined) {
-				// return 
+				let txt = '';
+				this.each((node) => txt += node.textContent);
+				return txt;
 			}
-			// return this.helpers.setTEXT.call(this, text);
+			else {
+				return this.helpers.setTEXT.call(this, text);
+			}
 		},
 
 		/****************************/
@@ -264,6 +261,20 @@ var cumulativeOffset = function(element) {
 			this.each(function(node, i) {
 				elements.each(function(n, i) {
 					node.appendChild(n);
+				});
+			});
+			return this;
+		},
+
+		/****************************/
+
+		appendTo: function(elements) {
+			if(typeof elements === 'string') {
+				elements = Q(elements);
+			}
+			this.each((node) => {
+				elements.each((elem) => {
+					elem.appendChild(node);
 				});
 			});
 			return this;
@@ -433,22 +444,7 @@ var cumulativeOffset = function(element) {
 document.addEventListener('DOMContentLoaded', DOMInit);
 
 function DOMInit() {
-	let i = 10;
-	var $i = Q('<input>', {
-		'data-i': 23
-	})
-	.input(function() {
-		// console.log('dd');
-	})
-	;
+	Q('#p').clone().appendTo('body');
+	// Q('#p').appendTo('body');
 
-	const $p = Q('#p');
-	console.log($p.text());
-
-	$i = Q('input');
-
-	Q('body')
-	// .append($i)
-	.append($i.clone())
-	;
 }

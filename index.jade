@@ -17,10 +17,9 @@ html
 			.col-xs-12.wrapper
 				//- p#p(style="display: none")
 				p#p(data-color="green")
-					|Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minillit anim id est laborum.
-				p(data-color='orange') hello
-				p(data-color='orange') hello
-				p() hello
+					|first
+					span inside
+				p second
 				.items
 				input
 				#i
@@ -35,8 +34,8 @@ html
 				.items
 					a(href="#here") HERE
 
-		-var script = 'q'
 		-var script = 'j'
+		-var script = 'q'
 
 		if script == 'q'
 			script(src="q.js")
