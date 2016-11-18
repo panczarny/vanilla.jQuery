@@ -39,6 +39,15 @@ html
 
 		if script == 'q'
 			script(src="q.js")
+			script.
+				document.addEventListener('DOMContentLoaded', DOMInit);
+
+				function DOMInit() {
+					console.log(Q('p').hasClass(''));
+					Q('#p').removeClass('');
+					console.log(Q('p').hasClass(''));
+				}
+
 		else if script == 'j'
 			script(src="jquery.js")
 			script.
