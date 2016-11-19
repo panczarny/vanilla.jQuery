@@ -13,7 +13,12 @@
 			}
 		}
 		else if(typeof selector === 'object') {
-			_selector = [selector];
+			if(isArray(selector)) {
+				_selector = selector;
+			}
+			else {
+				_selector = [selector];
+			}
 		}
 		const nodes = _selector;
 
@@ -300,6 +305,17 @@
 				this.each((node) => contains = (node.classList.contains(val) ? true : contains));
 			}
 			return contains;
+		},
+
+		/****************************/
+
+		find: function(selector) {
+			let found = [];
+			this.each((node) => {
+				const foundNodes = node.querySelectorAll(selector);
+				foundNodes.forEach((n) => found.push(n));
+			});
+			return Q(found);
 		}
 	};
 
@@ -448,6 +464,15 @@
 	else {
 		console.error('Q is already defined, I\'m not passing it as a Global!');
 	}
+
+	const isArray = function(array) {
+		if(typeof Array.isArray === 'undefined') {
+			return Object.prototype.toString.call(array) === '[object Array]';
+		}
+		else {
+			return Array.isArray(array);
+		}
+	};
 })();
 
 // browser-sync start --no-online --server --files "*.html, *.js, *.css"

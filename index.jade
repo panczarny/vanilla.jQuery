@@ -20,6 +20,7 @@ html
 					|first
 					span inside
 				p second
+					span |third
 				.items
 				input
 				#i
@@ -43,9 +44,7 @@ html
 				document.addEventListener('DOMContentLoaded', DOMInit);
 
 				function DOMInit() {
-					console.log(Q('p').hasClass(''));
-					Q('#p').removeClass('');
-					console.log(Q('p').hasClass(''));
+					console.log(Q('p').find('span').text());
 				}
 
 		else if script == 'j'

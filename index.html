@@ -18,7 +18,7 @@
     <div class="container">
       <div class="col-xs-12 wrapper">
         <p id="p" data-color="green" class="has">first<span>inside</span></p>
-        <p>second</p>
+        <p>second<span>|third</span></p>
         <div class="items"></div>
         <input>
         <div id="i">
@@ -40,9 +40,7 @@
       document.addEventListener('DOMContentLoaded', DOMInit);
       
       function DOMInit() {
-      	console.log(Q('p').hasClass(''));
-      	Q('#p').removeClass('');
-      	console.log(Q('p').hasClass(''));
+      	console.log(Q('p').find('span').text());
       }
       
     </script>
