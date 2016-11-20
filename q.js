@@ -145,9 +145,23 @@
 					if(type === undefined || callback === undefined) {
 						return this;
 					}
-					this.each((node) => {
-						node.addEventListener(type, callback, useCapture);
-					});
+
+					if(typeof callback === 'function') {
+						this.each((node) => {
+							node.addEventListener(type, callback, useCapture);
+						});
+					}
+					else if(typeof callback === 'string' && typeof useCapture === 'function') {
+						const matchSelector = callback;
+						callback = useCapture;
+						this.each((node) => {
+							node.addEventListener(type, function(e) {
+								if(Q(e.target).is(matchSelector)) {
+									callback.call(e.target, e);
+								}
+							});
+						});
+					}
 
 					return this;
 				}
@@ -318,6 +332,21 @@
 				foundNodes.forEach((n) => found.push(n));
 			});
 			return Q(found);
+		},
+
+		/****************************/
+
+		is: function(selector) {
+			let result = false;
+
+			this.each((node) => {
+				const nodeClone = node.cloneNode(false);
+				const nodeParent = node.parentNode.cloneNode(false);
+				nodeParent.appendChild(nodeClone);
+				result = (nodeClone === nodeParent.querySelector(selector));
+			});
+
+			return result;
 		}
 	};
 
