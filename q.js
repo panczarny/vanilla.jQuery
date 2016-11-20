@@ -239,11 +239,13 @@
 		/****************************/
 
 		append: function(elements) {
-			this.each(function(node, i) {
-				elements.each(function(n, i) {
-					node.appendChild(n);
+			if(elements !== undefined) {
+				this.each(function(node, i) {
+					elements.each(function(n, i) {
+						node.appendChild(n);
+					});
 				});
-			});
+			}
 			return this;
 		},
 
