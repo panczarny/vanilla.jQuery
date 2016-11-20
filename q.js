@@ -147,8 +147,10 @@
 					}
 
 					if(typeof callback === 'function') {
-						this.each((node) => {
-							node.addEventListener(type, callback, useCapture);
+						type.split(' ').forEach((type) => {
+							this.each((node) => {
+								node.addEventListener(type, callback, useCapture);
+							});
 						});
 					}
 					else if(typeof callback === 'string' && typeof useCapture === 'function') {
@@ -340,13 +342,74 @@
 			let result = false;
 
 			this.each((node) => {
-				const nodeClone = node.cloneNode(false);
-				const nodeParent = node.parentNode.cloneNode(false);
-				nodeParent.appendChild(nodeClone);
-				result = (nodeClone === nodeParent.querySelector(selector));
+				if(result === false) {
+					result = matches(node, selector);
+				}
 			});
 
 			return result;
+		},
+
+		/****************************/
+
+		val: function(value) {
+			let ret = '';
+			if(value === undefined) {
+				this.each((node) => {
+					if(node.value !== undefined) {
+						ret += node.value;
+					}
+				});
+			}
+			else {
+				this.each((node) => {
+					if(node.value !== undefined) {
+						node.value = value;
+					}
+				});
+				ret = this;
+			}
+			return ret;
+		},
+
+		/****************************/
+
+		parents: function(selector) {
+			let foundParents = [];
+			this.each((node) => {
+				let parent = node;
+				let i = 0;
+				while(parent.nodeType == 1 && (i++ < 8)) {
+					if(matches(parent, selector)) {
+						if(foundParents.indexOf(parent) == -1) {
+							foundParents.push(parent);
+						}
+					}
+
+					parent = parent.parentNode;
+				}
+			});
+
+			return Q(foundParents);
+		},
+
+		/****************************/
+
+		remove: function() {
+			this.each((node) => {
+				try {
+					node.parentElement.removeChild(node);
+				} catch(e) {}
+			});
+
+			return this;
+		},
+
+		/****************************/
+
+		focus: function(callback) {
+			this.nodes[0].focus();
+			return this;
 		}
 	};
 
@@ -410,12 +473,6 @@
 
 		input: function(callback) {
 			return this.helpers.events.add.call(this, 'input', callback);
-		},
-
-		/****************************/
-
-		focus: function(callback) {
-			return this.helpers.events.add.call(this, 'focus', callback);
 		},
 
 		/****************************/
@@ -503,6 +560,16 @@
 		else {
 			return Array.isArray(array);
 		}
+	};
+
+	const matches = function(node, selector) {
+		if(typeof node !== 'object' || node.nodeType !== 1) {
+			return false;
+		}
+		const nodeClone = node.cloneNode(false);
+		const nodeParent = node.parentNode.cloneNode(false);
+		nodeParent.appendChild(nodeClone);
+		return (nodeClone === nodeParent.querySelector(selector));
 	};
 })();
 
