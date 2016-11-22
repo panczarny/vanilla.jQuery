@@ -1,5 +1,47 @@
 /* jshint esversion: 6, unused: true */
 (function() {
+	// Functions
+	const createElement = (name, attrs = {}) => {
+		name = name.replace(/[<>]/g, '');
+		const el = document.createElement(name);
+		if(typeof attrs !== undefined) {
+			for(let key in attrs) {
+				if(attrs.hasOwnProperty(key)) {
+					el.setAttribute(key, attrs[key]);
+				}
+			}
+		}
+		return el;
+	};
+
+	const isElement = (element) => {
+		const allowedNodeTypes = [1, 9, 11];
+		return allowedNodeTypes.indexOf(element.nodeType) > -1;
+	};
+
+	const isArray = function(array) {
+		if(typeof Array.isArray === 'undefined') {
+			return Object.prototype.toString.call(array) === '[object Array]';
+		}
+		else {
+			return Array.isArray(array);
+		}
+	};
+
+	const matches = function(node, selector) {
+		if(typeof node !== 'object' || node.nodeType !== 1) {
+			return false;
+		}
+		const nodeClone = node.cloneNode(false);
+		const nodeParent = node.parentNode.cloneNode(false);
+		nodeParent.appendChild(nodeClone);
+		return (nodeClone === nodeParent.querySelector(selector));
+	};
+
+	const returnFalse = () => false;
+	const returnTrue = () => true;
+
+
 	const Q = (selector, ...args) => new Library(selector, args);
 
 	let Library = function(selector, args) {
@@ -163,7 +205,7 @@
 									if(Q(t).is(matchSelector)) {
 										const event = this.helpers.fixEvent(e);
 										event.currentTarget = t;
-										callback.call(t, event, t);
+										callback.call(t, event);
 									}
 									t = t.parentNode;
 								}
@@ -545,24 +587,36 @@
 		}
 	});
 
+	Q.Event.prototype = {
+		constructor: jQuery.Event,
+		isDefaultPrevented: returnFalse,
+		isPropagationStopped: returnFalse,
+		isImmediatePropagationStopped: returnFalse,
+		isSimulated: false,
 
-	// Functions
-	const createElement = (name, attrs = {}) => {
-		name = name.replace(/[<>]/g, '');
-		const el = document.createElement(name);
-		if(typeof attrs !== undefined) {
-			for(let key in attrs) {
-				if(attrs.hasOwnProperty(key)) {
-					el.setAttribute(key, attrs[key]);
-				}
+		preventDefault: function() {
+			console.log('prev');
+			var e = this.originalEvent;
+			this.isDefaultPrevented = returnTrue;
+			if(e && !this.isSimulated) {
+				e.preventDefault();
 			}
+		},
+		stopPropagation: function() {
+			var e = this.originalEvent;
+			this.isPropagationStopped = returnTrue;
+			if(e && !this.isSimulated) {
+				e.stopPropagation();
+			}
+		},
+		stopImmediatePropagation: function() {
+			var e = this.originalEvent;
+			this.isImmediatePropagationStopped = returnTrue;
+			if(e && !this.isSimulated) {
+				e.stopImmediatePropagation();
+			}
+			this.stopPropagation();
 		}
-		return el;
-	};
-
-	const isElement = (element) => {
-		const allowedNodeTypes = [1, 9, 11];
-		return allowedNodeTypes.indexOf(element.nodeType) > -1;
 	};
 
 	if(!window.Q) {
@@ -571,25 +625,6 @@
 	else {
 		console.error('Q is already defined, I\'m not passing it as a Global!');
 	}
-
-	const isArray = function(array) {
-		if(typeof Array.isArray === 'undefined') {
-			return Object.prototype.toString.call(array) === '[object Array]';
-		}
-		else {
-			return Array.isArray(array);
-		}
-	};
-
-	const matches = function(node, selector) {
-		if(typeof node !== 'object' || node.nodeType !== 1) {
-			return false;
-		}
-		const nodeClone = node.cloneNode(false);
-		const nodeParent = node.parentNode.cloneNode(false);
-		nodeParent.appendChild(nodeClone);
-		return (nodeClone === nodeParent.querySelector(selector));
-	};
 })();
 
 // browser-sync start --no-online --server --files "*.html, *.js, *.css"
