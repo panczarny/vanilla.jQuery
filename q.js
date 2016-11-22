@@ -158,8 +158,12 @@
 						callback = useCapture;
 						this.each((node) => {
 							node.addEventListener(type, function(e) {
-								if(Q(e.target).is(matchSelector)) {
-									callback.call(e.target, e);
+								let t = event.target;
+								while(t && t !== this) {
+									if(Q(t).is(matchSelector)) {
+										callback.call(e.target, e);
+									}
+									t = t.parentNode;
 								}
 							});
 						});
