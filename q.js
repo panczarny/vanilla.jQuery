@@ -1,3 +1,4 @@
+/* jshint esversion: 6, unused: true */
 (function() {
 	const Q = (selector, ...args) => new Library(selector, args);
 
@@ -22,7 +23,6 @@
 		}
 		const nodes = _selector;
 
-		let i = 0;
 
 		this.length = nodes.length;
 		this.version = '0.1.0';
@@ -42,12 +42,12 @@
 					const declarations = prop;
 
 					for(let dec in declarations) {
-						this.each((node, i) => action.apply(node.style, [dec, declarations[dec]]));
+						this.each((node) => action.apply(node.style, [dec, declarations[dec]]));
 					}
 				}
 				else {
 					if(val !== undefined) {
-						this.each((node, i) => action.apply(node.style, args));
+						this.each((node) => action.apply(node.style, args));
 						return this;
 					}
 					else {
@@ -59,7 +59,7 @@
 			},
 
 			doANIMfade: function(type, duration = 300, callback = function() {}, display = 'block') {
-				this.each(function(node, i) {
+				this.each(function(node) {
 					const _ = node;
 					const s = _.style;
 					const timeout = 25;
@@ -110,12 +110,12 @@
 				if(typeof prop === 'object') {
 					const attributes = prop;
 					for(let attr in attributes) {
-						this.each((node, i) => action.apply(node, [attr, attributes[attr]]));
+						this.each((node) => action.apply(node, [attr, attributes[attr]]));
 					}
 				}
 				else {
 					if(val !== undefined) {
-						this.each((node, i) => action.apply(node, args));
+						this.each((node) => action.apply(node, args));
 					}
 					else {
 						let props = [];
@@ -157,11 +157,13 @@
 						const matchSelector = callback;
 						callback = useCapture;
 						this.each((node) => {
-							node.addEventListener(type, function(e) {
+							node.addEventListener(type, (e) => {
 								let t = event.target;
 								while(t && t !== this) {
 									if(Q(t).is(matchSelector)) {
-										callback.call(e.target, e);
+										const event = this.helpers.fixEvent(e);
+										event.currentTarget = t;
+										callback.call(t, event, t);
 									}
 									t = t.parentNode;
 								}
@@ -183,6 +185,10 @@
 				});
 
 				return this;
+			},
+
+			fixEvent: function(origEvent) {
+				return new Q.Event(origEvent);
 			}
 		};
 
@@ -202,14 +208,14 @@
 		/****************************/
 
 		hide: function() {
-			this.nodes.forEach((node, i) => node.style.display = 'none');
+			this.nodes.forEach((node) => node.style.display = 'none');
 			return this;
 		},
 
 		/****************************/
 
 		show: function(style = 'block') {
-			this.nodes.forEach((node, i) => node.style.display = style);
+			this.nodes.forEach((node) => node.style.display = style);
 			return this;
 		},
 
@@ -260,8 +266,8 @@
 
 		append: function(elements) {
 			if(elements !== undefined) {
-				this.each(function(node, i) {
-					elements.each(function(n, i) {
+				this.each(function(node) {
+					elements.each(function(n) {
 						node.appendChild(n);
 					});
 				});
@@ -287,7 +293,7 @@
 
 		clone: function() {
 			let clones = [];
-			this.each(function(node, i) {
+			this.each(function(node) {
 				const clone = node.cloneNode(true);
 				clones.push(clone);
 			});
@@ -528,6 +534,15 @@
 				return result;
 			};
 		},
+	});
+
+	Q.extend({
+		Event: function(event) {
+			for(let key in event) {
+				this[key] = event[key];
+			}
+			this.originalEvent = event;
+		}
 	});
 
 
