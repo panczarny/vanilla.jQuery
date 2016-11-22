@@ -200,8 +200,8 @@
 						callback = useCapture;
 						this.each((node) => {
 							node.addEventListener(type, (e) => {
-								let t = event.target;
-								while(t && t !== this) {
+								let t = e.target;
+								while(t) {
 									if(Q(t).is(matchSelector)) {
 										const event = this.helpers.fixEvent(e);
 										event.currentTarget = t;
@@ -580,37 +580,45 @@
 
 	Q.extend({
 		Event: function(event) {
+			if(event.defaultPrevented || event.defaultPrevented === undefined && event.returnValue === false) {
+				this.isDefaultPrevented = returnTrue;
+			}
+			else {
+				this.isDefaultPrevented = returnFalse;
+			}
+
 			for(let key in event) {
-				this[key] = event[key];
+				if(typeof event[key] !== 'function') {
+					this[key] = event[key];
+				}
 			}
 			this.originalEvent = event;
 		}
 	});
 
 	Q.Event.prototype = {
-		constructor: jQuery.Event,
+		constructor: Q.Event,
 		isDefaultPrevented: returnFalse,
 		isPropagationStopped: returnFalse,
 		isImmediatePropagationStopped: returnFalse,
 		isSimulated: false,
 
 		preventDefault: function() {
-			console.log('prev');
-			var e = this.originalEvent;
+			const e = this.originalEvent;
 			this.isDefaultPrevented = returnTrue;
 			if(e && !this.isSimulated) {
 				e.preventDefault();
 			}
 		},
 		stopPropagation: function() {
-			var e = this.originalEvent;
+			const e = this.originalEvent;
 			this.isPropagationStopped = returnTrue;
 			if(e && !this.isSimulated) {
 				e.stopPropagation();
 			}
 		},
 		stopImmediatePropagation: function() {
-			var e = this.originalEvent;
+			const e = this.originalEvent;
 			this.isImmediatePropagationStopped = returnTrue;
 			if(e && !this.isSimulated) {
 				e.stopImmediatePropagation();
