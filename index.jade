@@ -47,7 +47,7 @@ html
 			script(src="q.js")
 			script.
 				Q(document).ready(function() {
-					Q('.items').empty();
+					console.log(Q('.items').html());
 				})
 				//- document.addEventListener('DOMContentLoaded', DOMInit);
 
@@ -57,8 +57,9 @@ html
 		else if script == 'j'
 			script(src="jquery.js")
 			script.
-				$(document).ready(function() {
-				});
+				$(function() {
+					console.log($('.items').html());
+				})
 				//- const $p = $('<p>');
 				//- $p.text('test; ' + (i++));
 				//- $p.appendTo($('.p-wrapper'));

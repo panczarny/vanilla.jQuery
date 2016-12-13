@@ -338,6 +338,26 @@
 
 		/****************************/
 
+		html: function(value) {
+			let retVal;
+			if(typeof value === 'undefined') {
+				retVal = this.nodes[0].innerHTML;
+			}
+			else if(typeof value === 'string') {
+				this.each((node) => {
+					node.innerHTML = value;
+				});
+
+				retVal = this;
+			}
+			else {
+				retVal = null;
+			}
+			return retVal;
+		},
+
+		/****************************/
+
 		append: function(elements) {
 			if(elements !== undefined) {
 				this.each(function(node) {
