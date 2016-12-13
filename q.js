@@ -323,6 +323,21 @@
 
 		/****************************/
 
+		empty: function() {
+			this.each((node) => {
+				const ELEMENT_NODE_TYPE = 1;
+				if(node.nodeType === ELEMENT_NODE_TYPE) {
+					while(node.firstChild) {
+						node.removeChild(node.firstChild);
+					}
+					node.textContent = '';
+				}
+			});
+			return this;
+		},
+
+		/****************************/
+
 		append: function(elements) {
 			if(elements !== undefined) {
 				this.each(function(node) {

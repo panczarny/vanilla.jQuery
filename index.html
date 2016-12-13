@@ -19,7 +19,7 @@
       <div class="col-xs-12 wrapper">
         <p id="p" data-color="green" class="has">first<span>inside</span></p>
         <p>second<span>|third</span></p>
-        <div class="items"></div>
+        <div class="items">textcontent</div>
         <input>
         <div id="i">
           <input>
@@ -31,6 +31,7 @@
         <div class="p-wrapper"></div>
         <div class="items">
           <h1>world</h1>
+          <p>hello</p><span>extra<span>new<i>xxx</i></span></span>
         </div>
         <div class="items"><a href="#here">HERE</a></div>
       </div>
@@ -38,7 +39,7 @@
     <script src="q.js"></script>
     <script>
       Q(document).ready(function() {
-      	Q('p').find('span').text();
+      	Q('.items').empty();
       })
       //- document.addEventListener('DOMContentLoaded', DOMInit);
       

@@ -21,7 +21,7 @@ html
 					span inside
 				p second
 					span |third
-				.items
+				.items textcontent
 				input
 				#i
 					input
@@ -32,6 +32,11 @@ html
 				.p-wrapper
 				.items
 					h1 world
+					p hello
+					span extra
+						span
+							|new
+							i xxx
 				.items
 					a(href="#here") HERE
 
@@ -42,7 +47,7 @@ html
 			script(src="q.js")
 			script.
 				Q(document).ready(function() {
-					Q('p').find('span').text();
+					Q('.items').empty();
 				})
 				//- document.addEventListener('DOMContentLoaded', DOMInit);
 
