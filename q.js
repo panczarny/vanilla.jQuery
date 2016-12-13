@@ -76,13 +76,10 @@
 		}
 		const nodes = _selector;
 
-
-		this.length = nodes.length;
-		this.version = '0.1.0';
 		this.nodes = nodes;
 
 		// Helpers functions
-		this.helpers = {
+		_helpers = {
 			doCSS: function(prop, val) {
 				const action = CSSStyleDeclaration.prototype.setProperty;
 				const args = arguments;
@@ -214,7 +211,7 @@
 								let t = e.target;
 								while(t) {
 									if(Q(t).is(matchSelector)) {
-										const event = this.helpers.fixEvent(e);
+										const event = _helpers.fixEvent(e);
 										event.currentTarget = t;
 										callback.call(t, event);
 									}
@@ -281,25 +278,25 @@
 		/****************************/
 
 		css: function(prop, val) {
-			return this.helpers.doCSS.call(this, prop, val);
+			return _helpers.doCSS.call(this, prop, val);
 		},
 
 		/****************************/
 
 		fadeIn: function(duration, callback, display) {
-			return this.helpers.doANIMfade.call(this, 'fadeIn', duration, callback, display);
+			return _helpers.doANIMfade.call(this, 'fadeIn', duration, callback, display);
 		},
 
 		/****************************/
 
 		fadeOut: function(duration, callback, display) {
-			return this.helpers.doANIMfade.call(this, 'fadeOut', duration, callback, display);
+			return _helpers.doANIMfade.call(this, 'fadeOut', duration, callback, display);
 		},
 
 		/****************************/
 
 		attr: function(prop, val) {
-			return this.helpers.doATTR.call(this, prop, val);
+			return _helpers.doATTR.call(this, prop, val);
 		},
 
 		/****************************/
@@ -311,14 +308,14 @@
 				return txt;
 			}
 			else {
-				return this.helpers.setTEXT.call(this, text);
+				return _helpers.setTEXT.call(this, text);
 			}
 		},
 
 		/****************************/
 
 		on: function(type, element, callback = null) {
-			return this.helpers.events.on.call(this, type, element, callback);
+			return _helpers.events.on.call(this, type, element, callback);
 		},
 
 		/****************************/
@@ -404,7 +401,7 @@
 
 		addClass: function(val = '') {
 			if(val !== ''){
-				return this.helpers.classManipulation.call(this, 'add', val);
+				return _helpers.classManipulation.call(this, 'add', val);
 			}
 		},
 
@@ -412,7 +409,7 @@
 
 		removeClass: function(val = '') {
 			if(val !== ''){
-				return this.helpers.classManipulation.call(this, 'remove', val);
+				return _helpers.classManipulation.call(this, 'remove', val);
 			}
 		},
 
@@ -420,7 +417,7 @@
 
 		toggleClass: function(val = '') {
 			if(val !== ''){
-				return this.helpers.classManipulation.call(this, 'toggle', val);
+				return _helpers.classManipulation.call(this, 'toggle', val);
 			}
 		},
 
@@ -566,44 +563,44 @@
 	/****************************/
 	Q.fn.extend({
 		click: function(callback) {
-			return this.helpers.events.add.call(this, 'click', callback);
+			return _helpers.events.add.call(this, 'click', callback);
 		},
 
 		/****************************/
 
 		keydown: function(callback) {
-			return this.helpers.events.add.call(this, 'keydown', callback);
+			return _helpers.events.add.call(this, 'keydown', callback);
 		},
 
 		/****************************/
 
 		keyup: function(callback) {
-			return this.helpers.events.add.call(this, 'keyup', callback);
+			return _helpers.events.add.call(this, 'keyup', callback);
 		},
 
 		/****************************/
 
 		keypress: function(callback) {
-			return this.helpers.events.add.call(this, 'keypress', callback);
+			return _helpers.events.add.call(this, 'keypress', callback);
 		},
 
 		/****************************/
 
 		input: function(callback) {
-			return this.helpers.events.add.call(this, 'input', callback);
+			return _helpers.events.add.call(this, 'input', callback);
 		},
 
 		/****************************/
 
 		blur: function(callback) {
-			return this.helpers.events.add.call(this, 'blur', callback);
+			return _helpers.events.add.call(this, 'blur', callback);
 		},
 
 		/****************************/
 
 		hover: function(callbackIN, callbackOUT = function() {}) {
-			this.helpers.events.add.call(this, 'mouseenter', callbackIN);
-			this.helpers.events.add.call(this, 'mouseleave', callbackOUT);
+			_helpers.events.add.call(this, 'mouseenter', callbackIN);
+			_helpers.events.add.call(this, 'mouseleave', callbackOUT);
 			return this;
 		}
 	});
