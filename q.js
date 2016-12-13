@@ -363,6 +363,11 @@
 							node.appendChild(n);
 						});
 					}
+					else if (elements instanceof Library) {
+						elements.each(function(n) {
+							node.appendChild(n);
+						});
+					}
 					else {
 						node.appendChild(elements);
 					}
