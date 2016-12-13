@@ -21,7 +21,7 @@ html
 					span inside
 				p second
 					span |third
-				.items textcontent
+					.items textcontent
 				input
 				#i
 					input
@@ -47,7 +47,7 @@ html
 			script(src="q.js")
 			script.
 				Q(document).ready(function() {
-					console.log(Q('.items').html());
+					console.log(Q('.items').parent());
 				})
 				//- document.addEventListener('DOMContentLoaded', DOMInit);
 
@@ -58,7 +58,7 @@ html
 			script(src="jquery.js")
 			script.
 				$(function() {
-					console.log($('.items').html());
+					console.log($('.items').parent());
 				})
 				//- const $p = $('<p>');
 				//- $p.text('test; ' + (i++));

@@ -478,6 +478,15 @@
 
 		/****************************/
 
+		parent: function() {
+			let retVal;
+			const parentElement = this.nodes[0].parentElement;
+			retVal = parentElement.nodeType === 1 ? Q(parentElement) : null;
+			return retVal;
+		},
+
+		/****************************/
+
 		parents: function(selector) {
 			let foundParents = [];
 			this.each((node) => {
