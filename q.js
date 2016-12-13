@@ -361,9 +361,14 @@
 		append: function(elements) {
 			if(elements !== undefined) {
 				this.each(function(node) {
-					elements.each(function(n) {
-						node.appendChild(n);
-					});
+					if(Array.isArray(elements)) {
+						elements.each(function(n) {
+							node.appendChild(n);
+						});
+					}
+					else {
+						node.appendChild(elements);
+					}
 				});
 			}
 			return this;
