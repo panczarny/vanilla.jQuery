@@ -41,16 +41,19 @@ html
 		if script == 'q'
 			script(src="q.js")
 			script.
-				document.addEventListener('DOMContentLoaded', DOMInit);
+				Q(document).ready(function() {
+					Q('p').find('span').text();
+				})
+				//- document.addEventListener('DOMContentLoaded', DOMInit);
 
-				function DOMInit() {
-					console.log(Q('p').find('span').text());
-				}
+				//- function DOMInit() {
+				//- }
 
 		else if script == 'j'
 			script(src="jquery.js")
 			script.
-				console.log($('p').hasClass(''));
+				$(document).ready(function() {
+				});
 				//- const $p = $('<p>');
 				//- $p.text('test; ' + (i++));
 				//- $p.appendTo($('.p-wrapper'));

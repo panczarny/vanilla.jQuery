@@ -37,11 +37,13 @@
     </div>
     <script src="q.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', DOMInit);
+      Q(document).ready(function() {
+      	Q('p').find('span').text();
+      })
+      //- document.addEventListener('DOMContentLoaded', DOMInit);
       
-      function DOMInit() {
-      	console.log(Q('p').find('span').text());
-      }
+      //- function DOMInit() {
+      //- }
       
     </script>
   </body>

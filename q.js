@@ -47,21 +47,32 @@
 	let Library = function(selector, args) {
 		let _selector;
 
-		if(typeof selector === 'string') {
+		switch(typeof selector) {
+			case 'string':
 			if(selector[0] === "<" && selector[selector.length - 1] === ">" && selector.length >= 3) {
 				_selector = [createElement(selector, args[0])];
 			}
 			else {
 				_selector = document.querySelectorAll(selector);
 			}
-		}
-		else if(typeof selector === 'object') {
+			break;
+
+			case 'object':
 			if(isArray(selector)) {
 				_selector = selector;
 			}
 			else {
 				_selector = [selector];
 			}
+			break;
+
+			case 'function':
+			const fn = selector;
+			Q(document).ready(fn);
+			return;
+
+			default:
+			break;
 		}
 		const nodes = _selector;
 
@@ -239,6 +250,12 @@
 
 	// extending Library
 	Q.fn = Library.prototype = {
+
+		/****************************/
+
+		ready: function(action) {
+			document.addEventListener('DOMContentLoaded', action);
+		},
 
 		/****************************/
 
