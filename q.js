@@ -242,7 +242,7 @@
 			},
 
 			sibling: function(elem, dir) {
-				return elem[dir];
+				return Q(elem[dir]);
 			}
 		};
 
