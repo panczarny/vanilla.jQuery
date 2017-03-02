@@ -239,6 +239,10 @@
 
 			fixEvent: function(origEvent) {
 				return new Q.Event(origEvent);
+			},
+
+			sibling: function(elem, dir) {
+				return elem[dir];
 			}
 		};
 
@@ -513,6 +517,16 @@
 			return Q(foundParents);
 		},
 
+		next: function() {
+			let elem = this.nodes[0];
+			return elem ? _helpers.sibling(elem, 'nextElementSibling') : false;
+		},
+
+		prev: function() {
+			let elem = this.nodes[0];
+			return elem ? _helpers.sibling(elem, 'previousElementSibling') : false;
+		},
+
 		/****************************/
 
 		remove: function() {
@@ -644,6 +658,20 @@
 				return result;
 			};
 		},
+
+		cumulativeOffset: function(element) {
+			let top = 0;
+			let left = 0;
+			do {
+				top += element.offsetTop  || 0;
+				left += element.offsetLeft || 0;
+			} while ((element = element.offsetParent));
+
+			return {
+				top,
+				left
+			};
+		}
 	});
 
 	Q.extend({
