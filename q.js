@@ -305,6 +305,12 @@
 
 		/****************************/
 
+		data: function(prop, val) {
+			return _helpers.doATTR.call(this, `data-${prop}`, val);
+		},
+
+		/****************************/
+
 		text: function(text) {
 			if(text === undefined) {
 				let txt = '';
@@ -671,6 +677,13 @@
 				top,
 				left
 			};
+		},
+
+		copyObject: (dest, src) => {
+			for(let key in src) {
+				dest[key] = src[key];
+			}
+			return dest;
 		}
 	});
 
