@@ -627,6 +627,46 @@
 			_helpers.events.add.call(this, 'mouseenter', callbackIN);
 			_helpers.events.add.call(this, 'mouseleave', callbackOUT);
 			return this;
+		},
+
+		/****************************/
+
+		serialize: function (intoArray = false) {
+			// https://plainjs.com/javascript/ajax/serialize-form-data-into-an-array-46/22
+			let serialized = [];
+			const form = this.nodes[0];
+			if (form !== null && form.nodeName == "FORM") {
+				const len = form.elements.length;
+				for (let i = 0; i < len; i++) {
+					let field = form.elements[i];
+					if (field.name && !field.disabled && field.type != 'file' && field.type != 'reset' && field.type != 'submit' && field.type != 'button') {
+						if (field.type == 'select-multiple') {
+							const optionsLength = form.elements[i].options.length;
+							for (let j = 0; j < optionsLength; j++) {
+								if(field.options[j].selected) {
+									serialized.push(intoArray
+										? {
+											name: field.name,
+											value: field.options[j].value
+										}
+										: encodeURIComponent(field.name) + "=" + encodeURIComponent(field.options[j].value)
+										);
+								}
+							}
+						}
+						else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+							serialized.push(intoArray
+								? {
+									name: field.name,
+									value: field.value
+								}
+								: encodeURIComponent(field.name) + "=" + encodeURIComponent(field.value)
+								);
+						}
+					}
+				}
+			}
+			return intoArray ? serialized : serialized.join('&').replace(/%20/g, '+');
 		}
 	});
 
