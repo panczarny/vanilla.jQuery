@@ -844,10 +844,14 @@
 
 						if(isSuccess) {
 							const response = conv(request.responseText);
-							opts.done(response, request.statusText, request);
+							if(typeof opts.done === 'function') {
+								opts.done(response, request.statusText, request);
+							}
 						}
 						else {
-							opts.fail(request, request.statusText);
+							if(typeof opts.fail === 'function') {
+								opts.fail(request, request.statusText);
+							}
 						}
 					}
 				};
