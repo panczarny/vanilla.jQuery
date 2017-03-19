@@ -776,6 +776,88 @@
 		}
 	};
 
+	// Ajax
+	const ajaxDefaults = {
+		type: 'GET',
+		url: '/',
+		data: {},
+		async: true,
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+		}
+	};
+	Q.extend({
+		ajax: function(options = {}) {
+			const setRequestHeaders = (req, headers) => {
+				for(let key in headers) {
+					req.setRequestHeader(key, headers[key]);
+				}
+			};
+
+			const conv = (response) => {
+				try {
+					response = JSON.parse(response + "");
+				} catch (error) {
+					return error;
+				}
+
+				return response;
+			};
+
+			const makeData = (data) => {
+				data = typeof data === 'string'
+				? data
+				: (() => {
+					let _opts = [];
+					for(let k in data) {
+						const value = data[k = encodeURIComponent(k)];
+						_opts.push(`${k}=${encodeURIComponent(value)}`);
+					}
+					return _opts.join('&');
+				})();
+
+				return data;
+			};
+
+
+			let opts = this.copyObject(this.copyObject({}, ajaxDefaults), options);
+
+			opts.type = opts.type.toUpperCase();
+
+			if(opts.dataType == 'json') {
+				opts.headers['Content-Type'] = 'application/json';
+			}
+			if(opts.type === 'POST') {
+				opts.headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8';
+			}
+
+			opts.data = makeData(opts.data);
+
+			const request = new XMLHttpRequest();
+			request.open(opts.type, opts.url, opts.async);
+
+			if(opts.async === true) {
+				request.onreadystatechange = () => {
+					if(request.readyState === XMLHttpRequest.DONE) {
+						const status = request.status;
+						const isSuccess = status >= 200 && status < 300 || status === 304;
+
+						if(isSuccess) {
+							const response = conv(request.responseText);
+							opts.done(response, request.statusText, request);
+						}
+						else {
+							opts.fail(request, request.statusText);
+						}
+					}
+				};
+			}
+
+			setRequestHeaders(request, opts.headers);
+			request.send(opts.data);
+		}
+	});
+
 	if(!window.Q) {
 		window.Q = Q;
 	}
