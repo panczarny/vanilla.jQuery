@@ -39,54 +39,7 @@ html
 							i xxx
 				.items
 					a(href="#here") HERE
-
-		-var script = 'j'
-		-var script = 'q'
-
-		if script == 'q'
-			script(src="q.js")
-			script.
-				Q(document).ready(function() {
-					console.log(Q('input').prev());
-				})
-				//- document.addEventListener('DOMContentLoaded', DOMInit);
-
-				//- function DOMInit() {
-				//- }
-
-		else if script == 'j'
-			script(src="jquery.js")
-			script.
-				$(function() {
-					console.log($('.items').parent());
-				})
-				//- const $p = $('<p>');
-				//- $p.text('test; ' + (i++));
-				//- $p.appendTo($('.p-wrapper'));
-
-				//- var d = document.querySelectorAll('p');
-				//- console.log(typeof d);
-				//- console.dir($.ajaxSetup);
-				//- console.dir($.toArray);
-				//- console.log(typeof $.toArray(d));
-				//- console.dir($);
-		//- script(src="new.vanilla.jquery.js")
-		//- script.
-			Q("p").fadeIn();
-			var e = Q("p");
-			console.log(e);
-			console.log(Q("p"));
-		//- 
-			script.
-				$("#p").fadeOut(300);
-				console.log($("p"));
-		//- script.
-			$(function() {
-				$.ajax({
-					url: 'ajax.php'
-				}).done(function(m) {
-					console.log(m);
-				});
-			});
 		//- script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
-		//- script(src="scripts.js")
+		script(src="jquery.js")
+		script(src="q.js")
+		script(src="scripts.js")
