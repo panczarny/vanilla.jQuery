@@ -859,6 +859,11 @@
 
 			setRequestHeaders(request, opts.headers);
 			request.send(opts.data);
+		},
+
+		isNumeric: (value) => {
+			const type = typeof value;
+			return (type === 'number' || type === 'string') && !Number.isNaN(value - Number.parseFloat(value));
 		}
 	});
 
