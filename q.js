@@ -14,23 +14,6 @@
 		return el;
 	};
 
-	const isElement = (element) => {
-		const ELEMENT_NODE = 1;
-		const DOCUMENT_NODE = 9;
-		const DOCUMENT_FRAGMENT_NODE = 11;
-		const allowedNodeTypes = [ELEMENT_NODE, DOCUMENT_NODE, DOCUMENT_FRAGMENT_NODE];
-		return allowedNodeTypes.includes(element.nodeType);
-	};
-
-	const isArray = function(array) {
-		if(typeof Array.isArray === 'undefined') {
-			return Object.prototype.toString.call(array) === '[object Array]';
-		}
-		else {
-			return Array.isArray(array);
-		}
-	};
-
 	const matches = function(node, selector) {
 		if(typeof node !== 'object' || node.nodeType !== 1) {
 			return false;
@@ -61,7 +44,7 @@
 			break;
 
 			case 'object':
-			if(isArray(selector)) {
+			if(Q.isArray(selector)) {
 				_selector = selector;
 			}
 			else {
@@ -371,7 +354,7 @@
 		append: function(elements) {
 			if(elements !== undefined) {
 				this.each(function(node) {
-					if(Array.isArray(elements)) {
+					if(Q.isArray(elements)) {
 						elements.each(function(n) {
 							node.appendChild(n);
 						});
@@ -674,65 +657,6 @@
 	});
 
 	Q.extend({
-		debounce: function(func, wait, immediate) {
-			// https://github.com/yckart/jquery.unevent.js/blob/master/jquery.unevent.js
-			var timeout;
-
-			return function() {
-				var context = this, args = arguments;
-				var later = function() {
-					timeout = null;
-					if(!immediate) {
-						func.apply(context, args);
-					}
-				};
-				var callNow = immediate && !timeout;
-				clearTimeout(timeout);
-				timeout = setTimeout(later, wait);
-				if(callNow) {
-					func.apply(context, args);
-				}
-			};
-		},
-
-		once: function(fn, context) {
-			var result;
-
-			return function() {
-				if(fn) {
-					result = fn.apply(context || this, arguments);
-					fn = null;
-				}
-
-				return result;
-			};
-		},
-
-		cumulativeOffset: function(element) {
-			let top = 0;
-			let left = 0;
-			do {
-				top += element.offsetTop  || 0;
-				left += element.offsetLeft || 0;
-			} while ((element = element.offsetParent));
-
-			return {
-				top,
-				left
-			};
-		},
-
-		copyObject: (dest, src) => {
-			for(let key in src) {
-				dest[key] = src[key];
-			}
-			return dest;
-		},
-
-		isFunction: (fn) => !!(fn && fn.constructor && fn.call && fn.apply)
-	});
-
-	Q.extend({
 		Event: function(event) {
 			if(event.defaultPrevented || event.defaultPrevented === undefined && event.returnValue === false) {
 				this.isDefaultPrevented = returnTrue;
@@ -864,12 +788,90 @@
 
 			setRequestHeaders(request, opts.headers);
 			request.send(opts.data);
+		}
+	});
+
+	/* Utilities */
+	Q.extend({
+
+		isElement: (element) => {
+			const ELEMENT_NODE = 1;
+			const DOCUMENT_NODE = 9;
+			const DOCUMENT_FRAGMENT_NODE = 11;
+			const allowedNodeTypes = [ELEMENT_NODE, DOCUMENT_NODE, DOCUMENT_FRAGMENT_NODE];
+			return allowedNodeTypes.includes(element.nodeType);
+		},
+
+		isArray: (array) => {
+			if(typeof Array.isArray === 'undefined') {
+				return Object.prototype.toString.call(array) === '[object Array]';
+			}
+			else {
+				return Array.isArray(array);
+			}
 		},
 
 		isNumeric: (value) => {
 			const type = typeof value;
 			return (type === 'number' || type === 'string') && !Number.isNaN(value - Number.parseFloat(value));
-		}
+		},
+
+		debounce: function(func, wait, immediate) {
+			// https://github.com/yckart/jquery.unevent.js/blob/master/jquery.unevent.js
+			var timeout;
+
+			return function() {
+				var context = this, args = arguments;
+				var later = function() {
+					timeout = null;
+					if(!immediate) {
+						func.apply(context, args);
+					}
+				};
+				var callNow = immediate && !timeout;
+				clearTimeout(timeout);
+				timeout = setTimeout(later, wait);
+				if(callNow) {
+					func.apply(context, args);
+				}
+			};
+		},
+
+		once: function(fn, context) {
+			var result;
+
+			return function() {
+				if(fn) {
+					result = fn.apply(context || this, arguments);
+					fn = null;
+				}
+
+				return result;
+			};
+		},
+
+		cumulativeOffset: function(element) {
+			let top = 0;
+			let left = 0;
+			do {
+				top += element.offsetTop  || 0;
+				left += element.offsetLeft || 0;
+			} while ((element = element.offsetParent));
+
+			return {
+				top,
+				left
+			};
+		},
+
+		copyObject: (dest, src) => {
+			for(let key in src) {
+				dest[key] = src[key];
+			}
+			return dest;
+		},
+
+		isFunction: (fn) => !!(fn && fn.constructor && fn.call && fn.apply)
 	});
 
 	if(!window.Q) {
