@@ -16,7 +16,7 @@
 
 	const isElement = (element) => {
 		const allowedNodeTypes = [1, 9, 11];
-		return allowedNodeTypes.indexOf(element.nodeType) > -1;
+		return allowedNodeTypes.includes(element.nodeType);
 	};
 
 	const isArray = function(array) {
@@ -511,7 +511,7 @@
 				let i = 0;
 				while(parent.nodeType == 1 && (i++ < 8)) {
 					if(matches(parent, selector)) {
-						if(foundParents.indexOf(parent) == -1) {
+						if(!foundParents.includes(parent)) {
 							foundParents.push(parent);
 						}
 					}
