@@ -7,11 +7,12 @@
 			if(!options.wrapperSelector || !options.transitionTime) {
 				throw new Error('Carousel needs wrapperSelector and transitionTime to be specified');
 			}
-			this.$wrapper = Q(options.wrapperSelector);
-			this.options.transitionTime = options.transitionTime;
+
+			Object.assign(this.options, options);
 		}
 
 		init () {
+			this.$wrapper = Q(this.options.wrapperSelector);
 			if(!this.$wrapper.nodes.length) {
 				console.error('There is no wrapperSelector in DOM, exiting');
 				return;
@@ -22,9 +23,32 @@
 
 			this.items = this.$wrapper.find(this.options.item).nodes;
 
+			if(this.options.indicators) {
+				this.makeIndicators();
+			}
+
 			this.addEventHandlers();
 
 			this.setActiveItem(0);
+		}
+
+		makeIndicators () {
+			this.$indicators = this.createIndicators();
+			this.$wrapper.append(this.$indicators);
+		}
+
+		createIndicators () {
+			let $ol = Q('<ol>', {
+				class: 'indicators'
+			});
+			for(let i = 0, len = this.items.length; i < len; i++) {
+				let $li = Q('<li>', {
+					'data-order': i
+				});
+				$ol.append($li);
+			}
+
+			return $ol;
 		}
 
 		addEventHandlers () {
@@ -35,10 +59,17 @@
 					this.navigate(direction);
 				});
 			}
+
+			if(this.options.indicators) {
+				this.$indicators.on('click', 'li', (e) => {
+					const nextSlide = Q(e.target).attr('data-order');
+					this.navigate(nextSlide);
+				});
+			}
 		}
 
 		navigate (direction) {
-			let index;
+			let index = 0;
 			switch (direction) {
 				case 'next':
 				index = this.getNextIndex();
@@ -49,18 +80,18 @@
 				break;
 
 				default:
-				index = 0;
+				if(Q.isNumeric(direction = parseInt(direction)) && direction >= 0 && direction < this.items.length) {
+					index = direction;
+				}
 				break;
 			}
 			this.setActiveItem(index);
 		}
 
 		setActiveItem (index) {
-			if(this.toggleClassTimeout) {
+			if(this.toggleClassTimeout || this.activeIndex === index) {
 				return;
 			}
-			const prev = this.getPreviousIndex();
-			const next = this.getNextIndex();
 			const $item = Q(this.items[index]);
 			const prevIndex = this.activeIndex !== undefined ? this.activeIndex : null;
 			const $prevItem = this.$activeItem !== undefined ? this.$activeItem : null;
@@ -72,6 +103,11 @@
 				$prevItem.addClass('out').removeClass('active');
 			}
 
+			if(this.options.indicators) {
+				let $li;
+				($li = this.$indicators.find('li')).removeClass('active');
+				Q($li.nodes[this.activeIndex]).addClass('active');
+			}
 
 			this.toggleClassTimeout = setTimeout(() => {
 				if($prevItem) {
@@ -134,7 +170,8 @@
 			prev: '.prev'
 		},
 		item: '.item',
-		transitionTime: null
+		transitionTime: null,
+		indicators: true
 	};
 
 	Q.extend({ Carousel });
