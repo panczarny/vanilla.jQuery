@@ -15,7 +15,10 @@
 	};
 
 	const isElement = (element) => {
-		const allowedNodeTypes = [1, 9, 11];
+		const ELEMENT_NODE = 1;
+		const DOCUMENT_NODE = 9;
+		const DOCUMENT_FRAGMENT_NODE = 11;
+		const allowedNodeTypes = [ELEMENT_NODE, DOCUMENT_NODE, DOCUMENT_FRAGMENT_NODE];
 		return allowedNodeTypes.includes(element.nodeType);
 	};
 
