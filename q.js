@@ -724,7 +724,9 @@
 				dest[key] = src[key];
 			}
 			return dest;
-		}
+		},
+
+		isFunction: (fn) => !!(fn && fn.constructor && fn.call && fn.apply)
 	});
 
 	Q.extend({
