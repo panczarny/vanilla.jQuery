@@ -547,7 +547,7 @@
 
 		/****************************/
 
-		focus: function(callback) {
+		focus: function() {
 			this.nodes[0].focus();
 			return this;
 		}
