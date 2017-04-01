@@ -66,6 +66,19 @@
 					this.navigate(nextSlide);
 				});
 			}
+
+			if(this.options.swipe) {
+				if(!Q.isFunction(Q.fn.swipe)) {
+					throw new Error('Please include Q.swipe in order to allow swipe methods');
+				}
+
+				this.$wrapper.swipe(this.options.swipe, (diff) => {
+					let next = '';
+
+					next = diff.x > 0 ? 'next' : 'prev';
+					this.navigate(next);
+				});
+			}
 		}
 
 		navigate (direction) {
@@ -171,7 +184,13 @@
 		},
 		item: '.item',
 		transitionTime: null,
-		indicators: true
+		indicators: true,
+		swipe: {
+			threshold: 50,
+			customCheck: function(diff) {
+				return Math.abs(diff.x) > this.threshold;
+			}
+		},
 	};
 
 	Q.extend({ Carousel });
