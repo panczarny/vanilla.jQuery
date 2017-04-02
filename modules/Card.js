@@ -1,10 +1,10 @@
 (function() {
+	let _options = {
+		thisActiveClass: 'active',
+		elementActiveClass: 'active'
+	};
 
 	const card = function(options) {
-		_options = {
-			thisActiveClass: 'active',
-			elementActiveClass: 'active'
-		};
 
 		Object.assign(_options, options);
 
