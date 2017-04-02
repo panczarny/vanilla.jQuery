@@ -195,27 +195,28 @@
 	const returnTrue = () => true;
 
 
-	const Q = (selector, ...args) => new Library(selector, args);
+	const Q = (selector, ...args) => new Q.init(selector, args);
 
-	let Library = function(selector, args) {
-		let _selector;
+
+	Q.init = function(selector, args) {
+		let nodes;
 
 		switch(typeof selector) {
 			case 'string':
 			if(selector[0] === "<" && selector[selector.length - 1] === ">" && selector.length >= 3) {
-				_selector = [_helpers.createElement(selector, args[0])];
+				nodes = [_helpers.createElement(selector, args[0])];
 			}
 			else {
-				_selector = document.querySelectorAll(selector);
+				nodes = document.querySelectorAll(selector);
 			}
 			break;
 
 			case 'object':
 			if(Q.isArray(selector)) {
-				_selector = selector;
+				nodes = selector;
 			}
 			else {
-				_selector = [selector];
+				nodes = [selector];
 			}
 			break;
 
@@ -227,18 +228,32 @@
 			default:
 			break;
 		}
-		const nodes = _selector;
+		const len = nodes.length;
 
-		this.nodes = nodes;
+		for(let i = 0; i < len; i++) {
+			this[i] = nodes[i];
+		}
+		this.length = len;
+		this.splice = [].splice;
 
-		// return this;
+		this.nodes = Array.from(nodes);
 	};
 
 	// extending Library
-	Q.fn = Library.prototype = {
+	Q.prototype = Q.fn = Q.init.prototype = Array.prototype;
 
-		/****************************/
+	// Allow extending the library
+	Q.fn.extend = Q.init.prototype.extend = Q.extend = function() {
+		const options = arguments[0];
 
+		if(typeof options !== 'object') {
+			return;
+		}
+
+		Object.assign(this, options);
+	};
+
+	Q.fn.extend({
 		ready: function(action) {
 			document.addEventListener('DOMContentLoaded', action);
 		},
@@ -358,7 +373,7 @@
 							node.appendChild(n);
 						});
 					}
-					else if (elements instanceof Library) {
+					else if (elements instanceof Q.init) {
 						elements.each(function(n) {
 							node.appendChild(n);
 						});
@@ -535,43 +550,12 @@
 		focus: function() {
 			this.nodes[0].focus();
 			return this;
-		}
-	};
+		},
 
-	// Allow extending the library
-	Q.extend = function() {
-		const target = this;
+		/****************************/
+		/****shortcuts for events****/
+		/****************************/
 
-		const options = arguments[0];
-		let key;
-
-		if(typeof arguments[0] !== 'object') {
-			return;
-		}
-
-		for(key in options) {
-			target[key] = options[key];
-		}
-	};
-	Q.fn.extend = Library.prototype.extend = function() {
-		const target = this;
-
-		const options = arguments[0];
-		let key;
-
-		if(typeof arguments[0] !== 'object') {
-			return;
-		}
-
-		for(key in options) {
-			target[key] = options[key];
-		}
-	};
-
-	/****************************/
-	/****shortcuts for events****/
-	/****************************/
-	Q.fn.extend({
 		click: function(callback) {
 			return _helpers.events.add.call(this, 'click', callback);
 		},
@@ -655,7 +639,7 @@
 		}
 	});
 
-	Q.extend({
+	Q.extend({ //
 		Event: function(event) {
 			if(event.defaultPrevented || event.defaultPrevented === undefined && event.returnValue === false) {
 				this.isDefaultPrevented = returnTrue;
