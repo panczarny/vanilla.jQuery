@@ -128,6 +128,12 @@
 				}
 				this.$activeItem.removeClass('in');
 				clearTimeout(this.toggleClassTimeout = null);
+
+				this.options.onCarouselSlideEnd({
+					activeItem: this.$activeItem,
+					prevItem: $prevItem,
+					activeIndex: this.activeIndex
+				});
 			}, this.options.transitionTime);
 		}
 
@@ -191,6 +197,7 @@
 				return Math.abs(diff.x) > this.threshold;
 			}
 		},
+		onCarouselSlideEnd: () => {}
 	};
 
 	Q.extend({ Carousel });
