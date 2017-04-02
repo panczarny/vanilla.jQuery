@@ -13,7 +13,7 @@
 
 		init () {
 			this.$wrapper = Q(this.options.wrapperSelector);
-			if(!this.$wrapper.nodes.length) {
+			if(!this.$wrapper.length) {
 				console.error('There is no wrapperSelector in DOM, exiting');
 				return;
 			}
@@ -21,7 +21,7 @@
 			(this.navigation.$next = this.$wrapper.find(this.options.navigation.next)).attr('navigate', 'next');
 			(this.navigation.$prev = this.$wrapper.find(this.options.navigation.prev)).attr('navigate', 'prev');
 
-			this.items = this.$wrapper.find(this.options.item).nodes;
+			this.items = this.$wrapper.find(this.options.item);
 
 			if(this.options.indicators) {
 				this.makeIndicators();
@@ -119,7 +119,7 @@
 			if(this.options.indicators) {
 				let $li;
 				($li = this.$indicators.find('li')).removeClass('active');
-				Q($li.nodes[this.activeIndex]).addClass('active');
+				Q($li[this.activeIndex]).addClass('active');
 			}
 
 			this.toggleClassTimeout = setTimeout(() => {
@@ -129,9 +129,9 @@
 				this.$activeItem.removeClass('in');
 				clearTimeout(this.toggleClassTimeout = null);
 
-				this.options.onCarouselSlideEnd({
-					activeItem: this.$activeItem,
-					prevItem: $prevItem,
+				this.options.onCarouselSlideEnd.call(this, {
+					$activeItem: this.$activeItem,
+					$prevItem: $prevItem,
 					activeIndex: this.activeIndex
 				});
 			}, this.options.transitionTime);
