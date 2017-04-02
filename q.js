@@ -1,27 +1,194 @@
 /* jshint esversion: 6, unused: true */
 (function() {
-	// Functions
-	const createElement = (name, attrs = {}) => {
-		name = name.replace(/[<>]/g, '');
-		const el = document.createElement(name);
-		if(typeof attrs !== undefined) {
-			for(let key in attrs) {
-				if(attrs.hasOwnProperty(key)) {
-					el.setAttribute(key, attrs[key]);
+	// Helpers functions
+	const _helpers = {
+		createElement: (name, attrs = {}) => {
+			name = name.replace(/[<>]/g, '');
+			const el = document.createElement(name);
+			if(typeof attrs !== undefined) {
+				for(let key in attrs) {
+					if(attrs.hasOwnProperty(key)) {
+						el.setAttribute(key, attrs[key]);
+					}
 				}
 			}
-		}
-		return el;
-	};
+			return el;
+		},
 
-	const matches = function(node, selector) {
-		if(typeof node !== 'object' || node.nodeType !== 1) {
-			return false;
+		matches: function(node, selector) {
+			if(typeof node !== 'object' || node.nodeType !== 1) {
+				return false;
+			}
+			const nodeClone = node.cloneNode(false);
+			const nodeParent = node.parentNode.cloneNode(false);
+			nodeParent.appendChild(nodeClone);
+			return (nodeClone === nodeParent.querySelector(selector));
+		},
+
+		doCSS: function(prop, val) {
+			const action = CSSStyleDeclaration.prototype.setProperty;
+			const args = arguments;
+
+			if(prop === undefined) {
+				return this;
+			}
+
+			if(typeof prop === 'object') {
+				const declarations = prop;
+
+				for(let dec in declarations) {
+					this.each((node) => action.apply(node.style, [dec, declarations[dec]]));
+				}
+			}
+			else {
+				if(val !== undefined) {
+					this.each((node) => action.apply(node.style, args));
+					return this;
+				}
+				else {
+					return this.nodes[0].style[prop];
+				}
+			}
+
+			return this;
+		},
+
+		doANIMfade: function(type, duration = 300, callback = function() {}, display = 'block') {
+			this.each(function(node) {
+				const _ = node;
+				const s = _.style;
+				const timeout = 25;
+				const step = timeout/duration;
+				switch(type) {
+					case 'fadeIn':
+					s.opacity = s.opacity || 0;
+					s.display = display;
+					(function fade() {
+						if((s.opacity = parseFloat(s.opacity) + step) > 1) {
+							s.opacity = 1;
+							callback();
+						}
+						else {
+							setTimeout(fade, timeout);
+						}
+					})();
+					break;
+
+					case 'fadeOut':
+					s.opacity = 1;
+					s.display = display;
+					(function fade() {
+						if((s.opacity = parseFloat(s.opacity) - step) < 0) {
+							s.opacity = 0;
+							s.display = "none";
+							callback();
+						}
+						else {
+							setTimeout(fade, timeout);
+						}
+					})();
+					break;
+				}
+			});
+
+			return this;
+		},
+
+		doATTR: function(prop, val) {
+			const action = Element.prototype.setAttribute;
+			const args = arguments;
+
+			if(prop === undefined) {
+				return this;
+			}
+
+			if(typeof prop === 'object') {
+				const attributes = prop;
+				for(let attr in attributes) {
+					this.each((node) => action.apply(node, [attr, attributes[attr]]));
+				}
+			}
+			else {
+				if(val !== undefined) {
+					this.each((node) => action.apply(node, args));
+				}
+				else {
+					let props = [];
+					this.each((node) => props.push(node.getAttribute(prop)));
+
+					return (props.length > 1 ? props : props[0]);
+				}
+			}
+
+			return this;
+		},
+
+		setTEXT: function(txt) {
+			this.each((node) => node.textContent = txt);
+
+			return this;
+		},
+
+		events: {
+			add: function(type, callback, useCapture = false) {
+				this.each((node) => node.addEventListener(type, callback, useCapture));
+
+				return this;
+			},
+
+			on: function(type, callback, useCapture = false) {
+				if(type === undefined || callback === undefined) {
+					return this;
+				}
+
+				if(typeof callback === 'function') {
+					type.split(' ').forEach((type) => {
+						this.each((node) => {
+							node.addEventListener(type, callback, useCapture);
+						});
+					});
+				}
+				else if(typeof callback === 'string' && typeof useCapture === 'function') {
+					const matchSelector = callback;
+					callback = useCapture;
+					this.each((node) => {
+						node.addEventListener(type, (e) => {
+							let t = e.target;
+							while(t) {
+								if(Q(t).is(matchSelector)) {
+									const event = _helpers.fixEvent(e);
+									event.currentTarget = t;
+									callback.call(t, event);
+								}
+								t = t.parentNode;
+							}
+						});
+					});
+				}
+
+				return this;
+			}
+		},
+
+		classManipulation: function(type, val) {
+			let classes;
+			classes = val.split(' ');
+			this.each((node) => {
+				classes.forEach((c) => {
+					node.classList[type](c);
+				});
+			});
+
+			return this;
+		},
+
+		fixEvent: function(origEvent) {
+			return new Q.Event(origEvent);
+		},
+
+		sibling: function(elem, dir) {
+			return Q(elem[dir]);
 		}
-		const nodeClone = node.cloneNode(false);
-		const nodeParent = node.parentNode.cloneNode(false);
-		nodeParent.appendChild(nodeClone);
-		return (nodeClone === nodeParent.querySelector(selector));
 	};
 
 	const returnFalse = () => false;
@@ -36,7 +203,7 @@
 		switch(typeof selector) {
 			case 'string':
 			if(selector[0] === "<" && selector[selector.length - 1] === ">" && selector.length >= 3) {
-				_selector = [createElement(selector, args[0])];
+				_selector = [_helpers.createElement(selector, args[0])];
 			}
 			else {
 				_selector = document.querySelectorAll(selector);
@@ -63,174 +230,6 @@
 		const nodes = _selector;
 
 		this.nodes = nodes;
-
-		// Helpers functions
-		_helpers = {
-			doCSS: function(prop, val) {
-				const action = CSSStyleDeclaration.prototype.setProperty;
-				const args = arguments;
-
-				if(prop === undefined) {
-					return this;
-				}
-
-				if(typeof prop === 'object') {
-					const declarations = prop;
-
-					for(let dec in declarations) {
-						this.each((node) => action.apply(node.style, [dec, declarations[dec]]));
-					}
-				}
-				else {
-					if(val !== undefined) {
-						this.each((node) => action.apply(node.style, args));
-						return this;
-					}
-					else {
-						return this.nodes[0].style[prop];
-					}
-				}
-
-				return this;
-			},
-
-			doANIMfade: function(type, duration = 300, callback = function() {}, display = 'block') {
-				this.each(function(node) {
-					const _ = node;
-					const s = _.style;
-					const timeout = 25;
-					const step = timeout/duration;
-					switch(type) {
-						case 'fadeIn':
-						s.opacity = s.opacity || 0;
-						s.display = display;
-						(function fade() {
-							if((s.opacity = parseFloat(s.opacity) + step) > 1) {
-								s.opacity = 1;
-								callback();
-							}
-							else {
-								setTimeout(fade, timeout);
-							}
-						})();
-						break;
-
-						case 'fadeOut':
-						s.opacity = 1;
-						s.display = display;
-						(function fade() {
-							if((s.opacity = parseFloat(s.opacity) - step) < 0) {
-								s.opacity = 0;
-								s.display = "none";
-								callback();
-							}
-							else {
-								setTimeout(fade, timeout);
-							}
-						})();
-						break;
-					}
-				});
-
-				return this;
-			},
-
-			doATTR: function(prop, val) {
-				const action = Element.prototype.setAttribute;
-				const args = arguments;
-
-				if(prop === undefined) {
-					return this;
-				}
-
-				if(typeof prop === 'object') {
-					const attributes = prop;
-					for(let attr in attributes) {
-						this.each((node) => action.apply(node, [attr, attributes[attr]]));
-					}
-				}
-				else {
-					if(val !== undefined) {
-						this.each((node) => action.apply(node, args));
-					}
-					else {
-						let props = [];
-						this.each((node) => props.push(node.getAttribute(prop)));
-
-						return (props.length > 1 ? props : props[0]);
-					}
-				}
-
-				return this;
-			},
-
-			setTEXT: function(txt) {
-				this.each((node) => node.textContent = txt);
-
-				return this;
-			},
-
-			events: {
-				add: function(type, callback, useCapture = false) {
-					this.each((node) => node.addEventListener(type, callback, useCapture));
-
-					return this;
-				},
-
-				on: function(type, callback, useCapture = false) {
-					if(type === undefined || callback === undefined) {
-						return this;
-					}
-
-					if(typeof callback === 'function') {
-						type.split(' ').forEach((type) => {
-							this.each((node) => {
-								node.addEventListener(type, callback, useCapture);
-							});
-						});
-					}
-					else if(typeof callback === 'string' && typeof useCapture === 'function') {
-						const matchSelector = callback;
-						callback = useCapture;
-						this.each((node) => {
-							node.addEventListener(type, (e) => {
-								let t = e.target;
-								while(t) {
-									if(Q(t).is(matchSelector)) {
-										const event = _helpers.fixEvent(e);
-										event.currentTarget = t;
-										callback.call(t, event);
-									}
-									t = t.parentNode;
-								}
-							});
-						});
-					}
-
-					return this;
-				}
-			},
-
-			classManipulation: function(type, val) {
-				let classes;
-				classes = val.split(' ');
-				this.each((node) => {
-					classes.forEach((c) => {
-						node.classList[type](c);
-					});
-				});
-
-				return this;
-			},
-
-			fixEvent: function(origEvent) {
-				return new Q.Event(origEvent);
-			},
-
-			sibling: function(elem, dir) {
-				return Q(elem[dir]);
-			}
-		};
 
 		// return this;
 	};
@@ -450,7 +449,7 @@
 
 			this.each((node) => {
 				if(result === false) {
-					result = matches(node, selector);
+					result = _helpers.matches(node, selector);
 				}
 			});
 
@@ -496,7 +495,7 @@
 				let parent = node;
 				let i = 0;
 				while(parent.nodeType == 1 && (i++ < 8)) {
-					if(matches(parent, selector)) {
+					if(_helpers.matches(parent, selector)) {
 						if(!foundParents.includes(parent)) {
 							foundParents.push(parent);
 						}
