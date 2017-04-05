@@ -561,7 +561,7 @@
 		/****************************/
 
 		click: function(callback) {
-			return _helpers.events.add.call(this, 'click', callback);
+			return Q.isFunction(callback) ? _helpers.events.add.call(this, 'click', callback) : this.trigger.call(this, 'click');
 		},
 
 		/****************************/
