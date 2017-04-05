@@ -191,6 +191,10 @@
 		}
 	};
 
+	const ELEMENT_NODE_TYPE = 1;
+	const DOCUMENT_NODE_TYPE = 9;
+	const DOCUMENT_FRAGMENT_NODE_TYPE = 11;
+
 	const returnFalse = () => false;
 	const returnTrue = () => true;
 
@@ -778,10 +782,7 @@
 	Q.extend({
 
 		isElement: (element) => {
-			const ELEMENT_NODE = 1;
-			const DOCUMENT_NODE = 9;
-			const DOCUMENT_FRAGMENT_NODE = 11;
-			const allowedNodeTypes = [ELEMENT_NODE, DOCUMENT_NODE, DOCUMENT_FRAGMENT_NODE];
+			const allowedNodeTypes = [ELEMENT_NODE_TYPE, DOCUMENT_NODE_TYPE, DOCUMENT_FRAGMENT_NODE_TYPE];
 			return allowedNodeTypes.includes(element.nodeType);
 		},
 
