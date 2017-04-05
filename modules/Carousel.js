@@ -8,6 +8,25 @@
 				throw new Error('Carousel needs wrapperSelector and transitionTime to be specified');
 			}
 
+			this.navigation = {};
+			this.options = {
+				navigation: {
+					next: '.next',
+					prev: '.prev'
+				},
+				item: '.item',
+				transitionTime: null,
+				indicators: true,
+				swipe: {
+					threshold: 50,
+					customCheck: function(diff) {
+						return Math.abs(diff.x) > this.threshold;
+					}
+				},
+				onCarouselSlideEnd: () => {},
+				onCarouselSlideStart: () => {},
+			};
+
 			Object.assign(this.options, options);
 		}
 
@@ -111,6 +130,12 @@
 			this.$activeItem = $item;
 			this.activeIndex = index;
 
+			this.options.onCarouselSlideStart.call(this, {
+				$nextActiveItem: this.$activeItem,
+				$prevItem: $prevItem,
+				activeIndex: index
+			});
+
 			this.$activeItem.addClass('active in');
 			if($prevItem) {
 				$prevItem.addClass('out').removeClass('active');
@@ -181,24 +206,6 @@
 			return next;
 		}
 	}
-
-	Carousel.prototype.navigation = {};
-	Carousel.prototype.options = {
-		navigation: {
-			next: '.next',
-			prev: '.prev'
-		},
-		item: '.item',
-		transitionTime: null,
-		indicators: true,
-		swipe: {
-			threshold: 50,
-			customCheck: function(diff) {
-				return Math.abs(diff.x) > this.threshold;
-			}
-		},
-		onCarouselSlideEnd: () => {}
-	};
 
 	Q.extend({ Carousel });
 })();
