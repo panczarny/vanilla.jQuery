@@ -265,7 +265,7 @@
 		/****************************/
 
 		each: function(action) {
-			this.nodes.forEach((node, i) => action(node, i));
+			this.forEach((node, i) => action(node, i));
 			return this;
 		},
 
