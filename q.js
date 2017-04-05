@@ -602,6 +602,52 @@
 			return this;
 		},
 
+		trigger: function(eventName) {
+			// http://stackoverflow.com/questions/2381572/how-can-i-trigger-a-javascript-event-click
+			const findDocument = function(node) {
+				let doc;
+				if (node.ownerDocument) {
+					doc = node.ownerDocument;
+				} else if (node.nodeType == DOCUMENT_NODE_TYPE){
+					doc = node;
+				} else {
+					doc = false;
+				}
+				return doc;
+			};
+
+			let eventClass = "";
+			switch (eventName) {
+				case "click":
+				case "mousedown":
+				case "mouseup":
+				eventClass = "MouseEvents";
+				break;
+
+				case "focus":
+				case "change":
+				case "blur":
+				case "select":
+				eventClass = "HTMLEvents";
+				break;
+
+				default:
+				return;
+			}
+
+			const doc = findDocument.call(this, this[0]);
+			if(!doc) {
+				return;
+			}
+			let event = doc.createEvent(eventClass);
+			event.initEvent(eventName, true, true);
+			event.synthetic = true;
+
+			this.each(node => node.dispatchEvent(event, true));
+
+			return this;
+		},
+
 		/****************************/
 
 		serialize: function (intoArray = false) {
