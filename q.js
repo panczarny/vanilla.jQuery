@@ -782,7 +782,7 @@
 			};
 
 
-			let opts = this.copyObject(this.copyObject({}, ajaxDefaults), options);
+			let opts = Object.assign({}, ajaxDefaults, options);
 
 			opts.type = opts.type.toUpperCase();
 
