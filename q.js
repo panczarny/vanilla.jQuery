@@ -804,6 +804,9 @@
 						const status = request.status;
 						const isSuccess = status >= 200 && status < 300 || status === 304;
 
+						if(Q.isFunction(opts.always)) {
+							opts.always(request);
+						}
 						if(isSuccess) {
 							const response = conv(request.responseText);
 							if(typeof opts.done === 'function') {
