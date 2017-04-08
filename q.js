@@ -809,12 +809,12 @@
 						}
 						if(isSuccess) {
 							const response = conv(request.responseText);
-							if(typeof opts.done === 'function') {
+							if(Q.isFunction(opts.done)) {
 								opts.done(response, request.statusText, request);
 							}
 						}
 						else {
-							if(typeof opts.fail === 'function') {
+							if(Q.isFunction(opts.fail)) {
 								opts.fail(request, request.statusText);
 							}
 						}
