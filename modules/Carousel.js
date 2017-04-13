@@ -23,8 +23,9 @@
 						return Math.abs(diff.x) > this.threshold;
 					}
 				},
-				onCarouselSlideEnd: () => {},
-				onCarouselSlideStart: () => {},
+				onCarouselSlideEnd: (/* { $activeItem, $prevItem, activeIndex } */) => {},
+				onCarouselSlideStart: (/* { $nextActiveItem, $prevItem, activeIndex } */) => {},
+				onCarouselInitialized: (/* { $activeItem, activeIndex } */) => {}
 			};
 
 			Object.assign(this.options, options);
@@ -49,6 +50,11 @@
 			this.addEventHandlers();
 
 			this.setActiveItem(0);
+
+			this.options.onCarouselInitialized.call(this, {
+				$activeItem: this.$activeItem,
+				activeIndex: this.activeIndex
+			});
 		}
 
 		makeIndicators () {
