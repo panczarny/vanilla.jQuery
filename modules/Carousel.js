@@ -41,7 +41,7 @@
 			(this.navigation.$next = this.$wrapper.find(this.options.navigation.next)).attr('navigate', 'next');
 			(this.navigation.$prev = this.$wrapper.find(this.options.navigation.prev)).attr('navigate', 'prev');
 
-			this.items = this.$wrapper.find(this.options.item);
+			this.$items = this.$wrapper.find(this.options.item);
 
 			if(this.options.indicators) {
 				this.makeIndicators();
@@ -66,7 +66,7 @@
 			let $ol = Q('<ol>', {
 				class: 'indicators'
 			});
-			for(let i = 0, len = this.items.length; i < len; i++) {
+			for(let i = 0, len = this.$items.length; i < len; i++) {
 				let $li = Q('<li>', {
 					'data-order': i
 				});
@@ -118,7 +118,7 @@
 				break;
 
 				default:
-				if(Q.isNumeric(direction = parseInt(direction)) && direction >= 0 && direction < this.items.length) {
+				if(Q.isNumeric(direction = parseInt(direction)) && direction >= 0 && direction < this.$items.length) {
 					index = direction;
 				}
 				break;
@@ -130,7 +130,7 @@
 			if(this.toggleClassTimeout || this.activeIndex === index) {
 				return;
 			}
-			const $item = Q(this.items[index]);
+			const $item = Q(this.$items[index]);
 			const prevIndex = this.activeIndex !== undefined ? this.activeIndex : null;
 			const $prevItem = this.$activeItem !== undefined ? this.$activeItem : null;
 			this.$activeItem = $item;
@@ -170,7 +170,7 @@
 
 		getPreviousIndex () {
 			let prev;
-			const len = this.items.length;
+			const len = this.$items.length;
 			if (this.activeIndex < 0 || this.activeIndex >= len) {
 				prev = 0;
 			}
@@ -192,7 +192,7 @@
 
 		getNextIndex () {
 			let next;
-			const len = this.items.length;
+			const len = this.$items.length;
 			if (this.activeIndex < 0 || this.activeIndex >= len) {
 				next = 0;
 			}
