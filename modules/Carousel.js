@@ -43,6 +43,8 @@
 
 			this.$items = this.$wrapper.find(this.options.item);
 
+			this.setTransitionDuration();
+
 			if(this.options.indicators) {
 				this.makeIndicators();
 			}
@@ -55,6 +57,10 @@
 				$activeItem: this.$activeItem,
 				activeIndex: this.activeIndex
 			});
+		}
+
+		setTransitionDuration () {
+			this.$items.each(it => it.style.transitionDuration = `${this.options.transitionTime}ms`);
 		}
 
 		makeIndicators () {
