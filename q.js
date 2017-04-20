@@ -167,7 +167,21 @@
 				}
 
 				return this;
-			}
+			},
+
+			off: function(type, handler) {
+				if(type === undefined || handler === undefined) {
+					return;
+				}
+
+				type.split(' ').forEach(type => {
+					this.each(node => {
+						node.removeEventListener(type, handler);
+					});
+				});
+
+				return this;
+			},
 		},
 
 		classManipulation: function(type, val) {
@@ -330,6 +344,12 @@
 
 		on: function(type, element, callback = null) {
 			return _helpers.events.on.call(this, type, element, callback);
+		},
+
+		/****************************/
+
+		off: function(type, element, callback = null) {
+			return _helpers.events.off.call(this, type, element, callback);
 		},
 
 		/****************************/
