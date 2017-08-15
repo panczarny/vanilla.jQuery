@@ -23,6 +23,7 @@
 						return Math.abs(diff.x) > this.threshold;
 					}
 				},
+				navWhenOnlyItem: false,
 				onCarouselSlideEnd: (/* { $activeItem, $prevItem, activeIndex } */) => {},
 				onCarouselSlideStart: (/* { $nextActiveItem, $prevItem, activeIndex } */) => {},
 				onCarouselInitialized: (/* { $activeItem, activeIndex } */) => {}
@@ -52,6 +53,11 @@
 			this.addEventHandlers();
 
 			this.setActiveItem(0);
+
+			if(this.$items.length === 1 && this.options.navWhenOnlyItem === false) {
+				this.hideNav();
+				this.hideIndicators();
+			}
 
 			this.options.onCarouselInitialized.call(this, {
 				$activeItem: this.$activeItem,
@@ -216,6 +222,16 @@
 				break;
 			}
 			return next;
+		}
+
+		hideNav () {
+			for(let $nav in this.navigation) {
+				this.navigation[$nav].hide();
+			}
+		}
+
+		hideIndicators () {
+			this.$indicators.hide();
 		}
 	}
 
