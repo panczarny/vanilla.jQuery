@@ -1,7 +1,0 @@
-{
-	"test": true,
-	"json": true,
-	"dupa": {
-		"heart": "of-gold"
-	}
-}
