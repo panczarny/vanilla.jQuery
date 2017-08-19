@@ -17,9 +17,8 @@
   },
   "homepage": "https://github.com/panczarny/vanilla.jquery#readme",
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-browser-sync": "^2.2.0",
-    "grunt-contrib-uglify": "^1.0.1",
-    "grunt-contrib-watch": "^1.0.0"
+    "browser-sync": "^2.18.13",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^4.0.0"
   }
 }
