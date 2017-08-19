@@ -1,25 +1,26 @@
+/* global Q */
 (function() {
-	let _options = {
-		thisActiveClass: 'active',
-		elementActiveClass: 'active'
-	};
+  let _options = {
+    thisActiveClass: 'active',
+    elementActiveClass: 'active'
+  };
 
-	const card = function(options) {
+  const card = function(options) {
 
-		Object.assign(_options, options);
+    Object.assign(_options, options);
 
-		this.each((el) => {
-			Q(el).click(function() {
-				const $this = Q(this);
-				const href = $this.data('href');
-				const $element = Q(href);
-				$element.toggleClass(_options.elementActiveClass);
-				$this.toggleClass(_options.thisActiveClass);
-			});
-		});
+    this.each((el) => {
+      Q(el).click(function() {
+        const $this = Q(this);
+        const href = $this.data('href');
+        const $element = Q(href);
+        $element.toggleClass(_options.elementActiveClass);
+        $this.toggleClass(_options.thisActiveClass);
+      });
+    });
 
-		return this;
-	};
+    return this;
+  };
 
-	Q.fn.extend({ card });
+  Q.fn.extend({ card });
 })();
