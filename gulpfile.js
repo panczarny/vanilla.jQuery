@@ -10,6 +10,7 @@ gulp.task('browser-sync', () =>
     files: [
     'q.js',
     'modules/*.js',
+    'scripts.js',
     'index.html'
     ]
   })
